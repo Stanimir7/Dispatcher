@@ -9,10 +9,10 @@ client = Client(account_sid, auth_token)
 my_twilio_number = "+18564463454"
 dest_cell_number = "+1"
 
-def send():
+def send(_num, _body):
 	message = client.messages.create(
-		to=dest_cell_number,
+		to= num,
 		from_=my_twilio_number,
-		body="Hi group!  Just gotta figure out recieving texts"
+		body
 	)
 
