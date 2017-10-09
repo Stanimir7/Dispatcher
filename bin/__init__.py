@@ -2,6 +2,7 @@ from flask import Flask
 from flask import jsonify
 from flask.ext.mysql import MySQL
 import bin.sms.send_sms
+import hashlib
 app = Flask(__name__)
 
 
@@ -22,20 +23,26 @@ cursor = conn.cursor()
 def hello():
         return "Hello World!"
 
-@app.route("/create_job")
+@app.route("/create_job", methods=['POST','GET'])
 def create_job():
 	#TODO grab info from post request here, throw into correct vars
 	#merchant ID is the only thing that is required, rest just pass in empty string if you don't want to worry about it for now
+	_m=hashlib.md5()
+	_body=""
 	_merchID = 1
-	_jobTitle = 'My Job'
+	_jobTitle = request.form['Job Title']
 	_jobDesc = 'Job Description'
 	_fromLoc = '123 Wallaby Lane'
 	_toLoc = '567 Pizza Pls'
-	_businessContactPhone = '12345670962'
+
+	body=jobTitle+jobDesc+"from:"+fromLoc+"to:"+toLoc
+	m.update(merchID+body)
+	_jobID=m.hexdigest() % 10**8
+	body=body+jobID
 	
 	#call database stored proc
-	#CALL `dispatcher`.`create_job`(<{IN p_merch_id CHAR(32)}>, <{IN p_title VARCHAR(64)}>, <{IN p_desc VARCHAR(256)}>, <{IN p_from_loc VARCHAR(256)}>, <{IN p_to_loc VARCHAR(256)}>, <{IN p_bus_phone CHAR(15)}>);
-	cursor.callproc('create_job',(_merchID,_jobTitle,_jobDesc,_fromLoc,_toLoc,_businessContactPhone))
+	#CALL `dispatcher`.`create_job`(<{IN p_merch_id CHAR(32)}>, <{IN p_title VARCHAR(64)}>, <{IN p_desc VARCHAR(256)}>, <{IN p_from_loc VARCHAR(256)}>, <{IN p_to_loc VARCHAR(256)}>);
+	cursor.callproc('create_job',(_merchID,_jobTitle,_jobDesc,_fromLoc,_toLoc,_jobID))
 	
 	data = cursor.fetchall()
  
@@ -46,10 +53,11 @@ def create_job():
 	
 	
 	res = ""
-	for row in data:
+	for num in data:
 		# row will contain a phone number that needs to recieve message. literally just do
 		# sms.send_sms.send(row)
-		res = res + str(row)
+		res = res + str(num)
+		sms.send_sms.send(num, body)
 	
 	#commit changes to DB
 	conn.commit()
