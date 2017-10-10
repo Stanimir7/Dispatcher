@@ -2,7 +2,7 @@ from flask import Flask
 from flask import jsonify
 from flask.ext.mysql import MySQL
 import bin.sms.send_sms
-import hashlib
+#import hashlib
 app = Flask(__name__)
 
 
@@ -27,22 +27,23 @@ def hello():
 def create_job():
 	#TODO grab info from post request here, throw into correct vars
 	#merchant ID is the only thing that is required, rest just pass in empty string if you don't want to worry about it for now
-	_m=hashlib.md5()
+	#_m=hashlib.md5()
 	_body=""
 	_merchID = 1
 	_jobTitle = request.form['Job Title']
 	_jobDesc = 'Job Description'
 	_fromLoc = '123 Wallaby Lane'
 	_toLoc = '567 Pizza Pls'
-
+	_busPhone = ''
+	
 	body=jobTitle+jobDesc+"from:"+fromLoc+"to:"+toLoc
-	m.update(merchID+body)
-	_jobID=m.hexdigest() % 10**8
-	body=body+jobID
+	#m.update(merchID+body)
+	#_jobID=m.hexdigest() % 10**8
+	#body=body+jobID
 	
 	#call database stored proc
 	#CALL `dispatcher`.`create_job`(<{IN p_merch_id CHAR(32)}>, <{IN p_title VARCHAR(64)}>, <{IN p_desc VARCHAR(256)}>, <{IN p_from_loc VARCHAR(256)}>, <{IN p_to_loc VARCHAR(256)}>, <{IN p_bus_phone CHAR(15)}>);
-	cursor.callproc('create_job',(_merchID,_jobTitle,_jobDesc,_fromLoc,_toLoc,''))
+	cursor.callproc('create_job',(_merchID,_jobTitle,_jobDesc,_fromLoc,_toLoc,_busPhone))
 	
 	data = cursor.fetchall()
  
