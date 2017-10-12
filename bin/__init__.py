@@ -30,7 +30,7 @@ def create_job():
 	#_m=hashlib.md5()
 	_body=""
 	_merchID = 1
-	_jobTitle = request.form['Job Title']
+	_jobTitle = request.get_json().get('Job Title','')
 	_jobDesc = 'Job Description'
 	_fromLoc = '123 Wallaby Lane'
 	_toLoc = '567 Pizza Pls'
