@@ -1,4 +1,6 @@
+import json, urllib
 from flask import Flask
+from flask import request
 from flask import jsonify
 from flask.ext.mysql import MySQL
 import bin.sms.send_sms
@@ -36,7 +38,7 @@ def create_job():
 	_toLoc = '567 Pizza Pls'
 	_busPhone = ''
 	
-	body=jobTitle+jobDesc+"from:"+fromLoc+"to:"+toLoc
+	body=_jobTitle+_jobDesc+"from:"+_fromLoc+"to:"+_toLoc
 	#m.update(merchID+body)
 	#_jobID=m.hexdigest() % 10**8
 	#body=body+jobID
@@ -48,9 +50,9 @@ def create_job():
 	data = cursor.fetchall()
  
 	if len(data) is 0:
-		return "ERROR: Empty Response"
+		return jsonify({'status':"ERROR: Empty Response"})
 	if data[0] is 'error':
-		return data[1]
+		return jsonify({'status':'error: ' + str(data[1])})
 	
 	
 	res = ""
@@ -63,7 +65,7 @@ def create_job():
 	#commit changes to DB
 	conn.commit()
 	
-	return res 
+	return jsonify({'status':"success"})
 
 
 @app.route("/receive_text", methods=['Get', 'Post'])

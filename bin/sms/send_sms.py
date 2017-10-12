@@ -11,8 +11,8 @@ dest_cell_number = "+1"
 
 def send(_num, _body):
 	message = client.messages.create(
-		to= num,
-		from_=my_twilio_number,
-		body
+		to = _num,
+		from_ = my_twilio_number,
+		body = _body
 	)
 
