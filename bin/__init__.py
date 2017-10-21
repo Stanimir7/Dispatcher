@@ -20,33 +20,28 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
 
-
-@app.route("/")
-def hello():
-        return "Hello World!"
-
 @app.route("/create_job", methods=['POST','GET'])
 def create_job():
 	#TODO grab info from post request here, throw into correct vars
 	#merchant ID is the only thing that is required, rest just pass in empty string if you don't want to worry about it for now
 	#_m=hashlib.md5()
 	_body=""
-	_merchID = 1
-	_jobTitle = request.get_json().get('Job Title','')
-	_jobDesc = 'Job Description'
-	_fromLoc = '123 Wallaby Lane'
-	_toLoc = '567 Pizza Pls'
-	_busPhone = ''
+	_merch_id = request.get_json().get('merch_id','')
+	_job_title = request.get_json().get('job_title','')
+	_job_desc = request.get_json().get('job_desc','')
+	_from_loc = request.get_json().get('from_loc','')
+	_to_loc = request.get_json().get('to_loc','')
+	_bus_phone = request.get_json().get('bus_phone','')
 	
-	body=_jobTitle+_jobDesc+"from:"+_fromLoc+"to:"+_toLoc
+	_body="New Job from ..."
 	#m.update(merchID+body)
 	#_jobID=m.hexdigest() % 10**8
 	#body=body+jobID
 	
 	#call database stored proc
 	#CALL `dispatcher`.`create_job`(<{IN p_merch_id CHAR(32)}>, <{IN p_title VARCHAR(64)}>, <{IN p_desc VARCHAR(256)}>, <{IN p_from_loc VARCHAR(256)}>, <{IN p_to_loc VARCHAR(256)}>, <{IN p_bus_phone CHAR(15)}>);
-	cursor.callproc('create_job',(_merchID,_jobTitle,_jobDesc,_fromLoc,_toLoc,_busPhone))
-	
+	cursor.callproc('create_job',(_merch_id,_job_itle,_job_desc,_from_loc,_to_loc,_bus_phone))
+
 	data = cursor.fetchall()
  
 	if len(data) is 0:
@@ -57,21 +52,11 @@ def create_job():
 	
 	res = ""
 	for num in data:
-		# row will contain a phone number that needs to recieve message. literally just do
-		# sms.send_sms.send(row)
-		res = res + str(num)
+		# row will contain a phone number that needs to recieve message.
+		#TO DO: create unique link and add it to the body before sending text
 		sms.send_sms.send(num, body)
 	
 	#commit changes to DB
 	conn.commit()
 	
 	return jsonify({'status':"success"})
-
-
-@app.route("/receive_text", methods=['Get', 'Post'])
-def receive_text():
-	return "receive"
-
-if __name__ == "__main__":
-        app.run(debug=True)
-
