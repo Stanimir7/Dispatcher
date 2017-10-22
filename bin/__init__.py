@@ -68,6 +68,18 @@ def create_job():
 	return jsonify({'status':"success"})
 
 
+@app.route("/register_driver", methods=['POST'])
+def register_driver():
+	_firstName = request.get_json().get('first_name','')
+	_lastName = request.get_json().get('last_name','')
+	_phoneNumber = request.get_json().get('phone_number','')
+	
+	#call database stored proc
+	cursor.callproc('new_driver',(_firstName, _lastName, _phoneNumber))
+	
+	return jsonify({'status':"success"})
+
+
 @app.route("/receive_text", methods=['Get', 'Post'])
 def receive_text():
 	return "receive"
