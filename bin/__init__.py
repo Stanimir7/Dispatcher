@@ -32,8 +32,9 @@ def create_job():
 	_from_loc = request.get_json().get('from_loc','')
 	_to_loc = request.get_json().get('to_loc','')
 	_bus_phone = request.get_json().get('bus_phone','')
-	
-	_body="New Job from ..."
+	cursor.execute("SELECT Name FROM Business WHERE merchID ="+_merch_id)
+	_bus_name=cursor.fetchone()
+	_body="New Job from "+ _bus_name
 	#m.update(merchID+body)
 	#_jobID=m.hexdigest() % 10**8
 	#body=body+jobID
