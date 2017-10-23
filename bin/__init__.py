@@ -2,11 +2,10 @@ import json, urllib
 from flask import Flask
 from flask import request
 from flask import jsonify
-from flask.ext.mysql import MySQL
+from flask_mysqldb import MySQL
 import bin.sms.send_sms
 #import hashlib
 app = Flask(__name__)
-
 
 #MySQL Connection
 mysql = MySQL()
@@ -17,8 +16,6 @@ app.config['MYSQL_DATABASE_PASSWORD'] = 'dispatcher'
 app.config['MYSQL_DATABASE_DB'] = 'dispatcher'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
-conn = mysql.connect()
-cursor = conn.cursor()
 
 
 @app.route("/")
@@ -45,6 +42,10 @@ def create_job():
 	
 	#call database stored proc
 	#CALL `dispatcher`.`create_job`(<{IN p_merch_id CHAR(32)}>, <{IN p_title VARCHAR(64)}>, <{IN p_desc VARCHAR(256)}>, <{IN p_from_loc VARCHAR(256)}>, <{IN p_to_loc VARCHAR(256)}>, <{IN p_bus_phone CHAR(15)}>);
+	
+	conn = mysql.connect()
+	cursor = conn.cursor()
+
 	cursor.callproc('create_job',(_merchID,_jobTitle,_jobDesc,_fromLoc,_toLoc,_busPhone))
 	
 	data = cursor.fetchall()
@@ -64,7 +65,8 @@ def create_job():
 	
 	#commit changes to DB
 	conn.commit()
-	
+	cursor.close()
+	conn.close()
 	return jsonify({'status':"success"})
 
 
