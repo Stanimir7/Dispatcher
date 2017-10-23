@@ -54,7 +54,6 @@ def create_job():
 	if data[0] is 'error':
 		return jsonify({'status':'error: ' + str(data[1])})
 	
-	
 	res = ""
 	for num in data:
 		# row will contain a phone number that needs to recieve message. literally just do
@@ -67,11 +66,32 @@ def create_job():
 	
 	return jsonify({'status':"success"})
 
-
+@app.route("/register_business", methods=['GET', 'POST'])
+def register_business():
+	_merchID =  request.get_json().get('merch_ID','')
+	_merchName =  request.get_json().get('merch_name','')
+	_phoneNum=  request.get_json().get('phone_num','')
+	_address=  request.get_json().get('merch_address','')
+	
+	#call database stored proc
+	#CALL `dispatcher`.`create_job`(<{IN p_merch_id CHAR(32)}>, <{IN p_title VARCHAR(64)}>, <{IN p_desc VARCHAR(256)}>, <{IN p_from_loc VARCHAR(256)}>, <{IN p_to_loc VARCHAR(256)}>, <{IN p_bus_phone CHAR(15)}>);
+	cursor.callproc('register_business',(_merchID,_merchName,_phoneNum,_address))
+	
+	data = cursor.fetchall()
+ 
+	if len(data) is 0:
+		return jsonify({'status':"ERROR: Empty Response"})
+	if data[0] is 'error':
+		return jsonify({'status':'error: ' + str(data[1])})
+	
+	#commit changes to DB
+	conn.commit()
+	
+	return jsonify({'status':"success"})
+	
 @app.route("/receive_text", methods=['Get', 'Post'])
 def receive_text():
 	return "receive"
 
 if __name__ == "__main__":
         app.run(debug=True)
-
