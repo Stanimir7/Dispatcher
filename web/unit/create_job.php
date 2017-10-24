@@ -3,14 +3,15 @@
 
 
 //API Url
-$url = 'http://ec2-52-23-224-226.compute-1.amazonaws.com/dispatcher/create_job';
+$url = '/dispatcher/create_job';
  
 //Initiate cURL.
 $ch = curl_init($url);
  
 //The JSON data.
 $jsonData = array(
-    'Job Title' => 'Justin\'s Driver'
+    'job_title' => 'Justin\'s Driver',
+    'job_desc' => 'asdf'
 );
  
 //Encode the array into JSON.
@@ -27,3 +28,4 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
  
 //Execute the request
 $result = curl_exec($ch);
+?>

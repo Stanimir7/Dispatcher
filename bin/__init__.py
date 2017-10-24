@@ -17,11 +17,13 @@ app.config['MYSQL_DATABASE_PASSWORD'] = 'dispatcher'
 app.config['MYSQL_DATABASE_DB'] = 'dispatcher'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
-conn = mysql.connect()
-cursor = conn.cursor()
 
 @app.route("/create_job", methods=['POST','GET'])
 def create_job():
+
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	
 	#TODO grab info from post request here, throw into correct vars
 	#merchant ID is the only thing that is required, rest just pass in empty string if you don't want to worry about it for now
 	#_m=hashlib.md5()
@@ -32,7 +34,7 @@ def create_job():
 	_from_loc = request.get_json().get('from_loc','')
 	_to_loc = request.get_json().get('to_loc','')
 	_bus_phone = request.get_json().get('bus_phone','')
-	cursor.execute("SELECT Name FROM Business WHERE merchID ="+_merch_id)
+	cursor.execute("SELECT BusName FROM Business WHERE MerchantID = "+_merch_id)
 	_bus_name=cursor.fetchone()
 	_body="New Job from "+ _bus_name
 	#m.update(merchID+body)
@@ -55,9 +57,10 @@ def create_job():
 	for num in data:
 		# row will contain a phone number that needs to recieve message.
 		#TO DO: create unique link and add it to the body before sending text
-		sms.send_sms.send(num, body)
+		#sms.send_sms.send(num, body)
 	
 	#commit changes to DB
 	conn.commit()
-	
+	cursor.close()
+	conn.close()
 	return jsonify({'status':"success"})
