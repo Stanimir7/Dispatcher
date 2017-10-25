@@ -1,16 +1,21 @@
 <?php
 
-
+ini_set('display_errors',1);
+error_reporting(E_ALL);
 
 //API Url
-$url = '127.0.0.1:8080/dispatcher/create_job';
- 
+#$url = $_SERVER['HTTP_HOST'].'/dispatcher/register_driver';
+$url = 'localhost/dispatcher/register_driver';
+#echo $url;
+
 //Initiate cURL.
 $ch = curl_init($url);
  
 //The JSON data.
 $jsonData = array(
-    'Job Title' => 'Justin\'s Driver'
+    'first_name' => 'Billy',
+    'last_name' => 'Jones',
+    'phone_number' => '12345'
 );
  
 //Encode the array into JSON.
@@ -27,3 +32,6 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
  
 //Execute the request
 $result = curl_exec($ch);
+echo curl_error($ch);
+
+?>
