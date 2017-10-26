@@ -16,6 +16,7 @@ app.config['MYSQL_USER'] = 'dispatcher'
 app.config['MYSQL_PASSWORD'] = 'dispatcher'
 app.config['MYSQL_DB'] = 'dispatcher'
 app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql.init_app(app)
 
 
@@ -82,8 +83,9 @@ def register_driver():
  
         #we are not expecting any data in response except in error
         if len(data) is not 0:
-            res = jsonify({'status':str(data[0]),
-                           'message':str(data[1])})
+            res = jsonify(data[0])
+            #res = jsonify({'status':str(data[0]),
+            #               'message':str(data[1])})
         else:
             #commit changes to DB
             mysql.connection.commit()
