@@ -1,5 +1,12 @@
+<!DOCTYPE html>
 <html>
-<head><title>Dispatcher Driver Registration</title></head>
+<head>
+<title>Dispatcher Driver Registration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="/css/w3.css">
+
+</head>
 <body>
 <?php
 if (isset($_POST['Submit']))
@@ -54,22 +61,28 @@ if (isset($_POST['Submit']))
     #    echo curl_error($ch);
 } else {
 ?>
-    
-    <form id='signup' method='post'
-        accept-charset='UTF-8'>
-        <fieldset >
-        <legend>Dispatcher Driver Registration</legend>
-        <input type='hidden' name='submitted' id='submitted' value='1'/>
-        <label for='first_name' >First Name*: </label>
-            <input type='text' name='first_name' id='first_name' maxlength="50" />
-        <label for='last_name' >:Last Name*:</label>
-            <input type='text' name='last_name' id='last_name' maxlength="50" />
-        <label for='phone_number' >Phone Number*:</label>
-            <input type='text' name='phone_number' id='phone_number' maxlength="50" />
-        <input type='submit' name='Submit' value='Submit' />
-        </fieldset>
-    </form>
-    
+    <br>
+    <div class="w3-container">
+        <div class="w3-card-4">
+            <div class="w3-container w3-green">
+                <h2>Dispatcher Driver Registration</h2>
+            </div>
+            <form id='signup' method='post'
+                accept-charset='UTF-8' class="w3-container">
+                
+                <input type='hidden' name='submitted' id='submitted' value='1'/>
+                <label for='first_name' >First Name*: </label>
+                    <input type='text' name='first_name' id='first_name' maxlength="50" class="w3-input w3-border" />
+                <label for='last_name' >Last Name*:</label>
+                    <input type='text' name='last_name' id='last_name' maxlength="50" class="w3-input w3-border" />
+                <label for='phone_number' >Phone Number*:</label>
+                    <input type='text' name='phone_number' id='phone_number' maxlength="50" class="w3-input w3-border" />
+       
+                <span class="w3-container"><input type='submit' name='Submit' value='Submit' class="w3-btn w3-blue" /></span>
+                    
+            </form>
+        </div>
+    </div>
 <?php
 }
 ?>
