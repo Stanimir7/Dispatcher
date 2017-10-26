@@ -8,9 +8,16 @@
 
 </head>
 <body>
+    <br>
+    <div class="w3-container">
+        <div class="w3-card-4">
+            <div class="w3-container w3-blue">
+                <h2>Dispatcher Driver Registration</h2>
+            </div>
 <?php
 if (isset($_POST['Submit']))
 {
+    echo '<div class="w3-container">';
     #ini_set('display_errors',1);
     #error_reporting(E_ALL);
     
@@ -47,26 +54,25 @@ if (isset($_POST['Submit']))
     //Execute the request
     $result = json_decode(curl_exec($ch));
     if (isset($result)) {
-        if ($result->{"status"} == "success")
-            echo "Success.";
+        if ($result->{"status"} == "success"){
+            echo "<h4>Sucessful registration. Welcome to Dispatcher, ".$_POST['first_name']."!</h4>";
+           
+        }
         else {
             if ($result->status == 'error') #could be 'info' or something
-                echo "<h3>Error: ".$result->status."</h3>";
-            echo "<p>Message: ".$result->message."</p>";
+                echo "<h3>Error</h3>";
+            echo "<p>".$result->message."</p>";
             #var_dump($result);
         }
     } else
         echo "Empty response. Panic.";
     #if(curl_errno($ch))
     #    echo curl_error($ch);
+     echo '<span class="w3-container"><a href="signup.php" class="w3-btn w3-blue">Go Back</a></span>';
+    echo '</div>';
 } else {
 ?>
-    <br>
-    <div class="w3-container">
-        <div class="w3-card-4">
-            <div class="w3-container w3-green">
-                <h2>Dispatcher Driver Registration</h2>
-            </div>
+    
             <form id='signup' method='post'
                 accept-charset='UTF-8' class="w3-container">
                 
@@ -81,11 +87,11 @@ if (isset($_POST['Submit']))
                 <span class="w3-container"><input type='submit' name='Submit' value='Submit' class="w3-btn w3-blue" /></span>
                     
             </form>
-        </div>
-    </div>
+
 <?php
 }
 ?>
-
+        </div>
+    </div>
 </body>
 </html>
