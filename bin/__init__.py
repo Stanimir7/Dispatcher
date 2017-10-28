@@ -74,8 +74,8 @@ def register_business():
 	_address=  request.get_json().get('merch_address','')
 	
 	#call database stored proc
-	#CALL `dispatcher`.`create_job`(<{IN p_merch_id CHAR(32)}>, <{IN p_title VARCHAR(64)}>, <{IN p_desc VARCHAR(256)}>, <{IN p_from_loc VARCHAR(256)}>, <{IN p_to_loc VARCHAR(256)}>, <{IN p_bus_phone CHAR(15)}>);
-	cursor.callproc('register_business',(_merchID,_merchName,_phoneNum,_address))
+	#CALL `dispatcher`.`new_business`(<{IN p_merch_id CHAR(32)}>, <{IN p_name VARCHAR(128)}>, <{IN p_address VARCHAR(256)}>, <{IN p_phone CHAR(15)}>);
+	cursor.callproc('new_business',(_merchID,_merchName,_address,_phoneNum))
 	
 	data = cursor.fetchall()
  
