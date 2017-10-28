@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<title>{{_bus_name}} - Job</title>
+	</head>
+	<body>
+		<h1>Job Available for {{_bus_name}}</h1>
+		{% if _job_title %}
+		<h2>{{_job_title}}</h2>
+		{% endif %}
+		<p>
+		{% if _job_desc %}
+		{{_job_desc}}<br/>
+		{% endif %}
+		{% if _from_loc %}
+		from:{{_from_loc}}<br/>
+		{% endif %}
+		{% if _to_loc %}
+		to:{{_to_loc}}<br/>
+		{% endif %}
+		{% if _bus_phone %}
+		for more info, call:{{_bus_phone}}
+		{% endif %}
+		</p>
+		<button type="submit" formmethod="post" formaction="/claim">Claim Job</button>
+	</body>
+</html>
