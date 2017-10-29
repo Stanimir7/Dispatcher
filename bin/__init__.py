@@ -63,7 +63,7 @@ def create_job():
 		m.update(salt)
 		_job_hash=m.hexdigest() % 10**8
 		unique_url=url_for('claim_page',hashed_value=_job_hash)
-		#TO DO: store url in DB
+		#TO DO: store url in DB and associated with a jobID
 		body=body+" claim link:"+unique_url
 		############################sms.send_sms.send(num, body)
 		
@@ -78,8 +78,16 @@ def claim_page(hashed_value):
 	conn = mysql.connect()
 	cursor = conn.cursor()
 	
-	cursor.execute("SELECT <ListOfJobInfo> FROM <TableName> WHERE <uniqueJobID> = "+hashed_value)
-	_list_of_data=cursor.fetchone()
+	cursor.execute("SELECT jobID FROM <TableName> WHERE <uniqueJobID> = "+hashed_value)
+	_job_id=cursor.fetchone()
+	cursor.execute("SELECT job_status FROM <TableName> Where <uniqueJobID> = "+_job_id)
+	_job_status=cursor.fetchone()
+	if(_job_status == "open")
+		# render the page allowing to claim
+	else
+		# render the page that says the job has been taken already
+	cursor.execute("SELECT driverID FROM <TableName> WHERE <uniqueJobID> = "+hashed_value)
+	
 	#somehow unpackage the data and render the webpage when the driver goes to the URL
 
 	cursor.close()
