@@ -52,10 +52,10 @@ def create_job():
 		return jsonify({'status':"ERROR: Empty Response"})
 	if data[0] is 'error':
 		return jsonify({'status':'error: ' + str(data[1])})
-	
+	_job_id=data[0]	
 	
 	res = ""
-	for num in data:
+	for num in data[1:]:
 		# row will contain a phone number that needs to recieve message.
 		#TO DO: create unique link and add it to the body before sending text
 		m.update(num)
@@ -64,7 +64,7 @@ def create_job():
 		_job_hash=m.hexdigest() % 10**8
 		unique_url=url_for('claim_page',hashed_value=_job_hash)
 		#TO DO: store url in DB and associated with a jobID
-		body=body+" claim link:"+unique_url
+		body=body+" claim link: "+unique_url
 		############################sms.send_sms.send(num, body)
 		
 	#commit changes to DB
@@ -83,14 +83,26 @@ def claim_page(hashed_value):
 	cursor.execute("SELECT job_status FROM <TableName> Where <uniqueJobID> = "+_job_id)
 	_job_status=cursor.fetchone()
 	if(_job_status == "open")
-		# render the page allowing to claim
-	else
-		# render the page that says the job has been taken already
-	cursor.execute("SELECT driverID FROM <TableName> WHERE <uniqueJobID> = "+hashed_value)
+		cursor.execute("SELECT driverID FROM <TableName> WHERE <uniqueJobID> = "+hashed_value)
+		_driver = cursor.fetchone()	
+		# db call change _job_status and assign driver 
+		cursor.close()
+		conn.close()
+		return render_template('claim.html',_bus_name=_bus_name,_job_title=_jobtitle,_job_desc=_job_desc,_from_loc=_from_loc,_to_loc=_to_loc,_bus_phone=bus_phone)
 	
-	#somehow unpackage the data and render the webpage when the driver goes to the URL
-
-	cursor.close()
-	conn.close()
-	return render_template('claim.html',_bus_name=_bus_name,_job_title=_jobtitle,_job_desc=_job_desc,_from_loc=_from_loc,_to_loc=_to_loc,_bus_phone=bus_phone)
+	else
+		cursor.execute("SELECT driverID FROM <TableName> WHERE <uniqueJobID> = "+hashed_value)
+		_driver_current_accessor = cursor.fetchone()	
+		
+		cursor.execute("SELECT driverID FROM <TableName> WHERE <JobID> = "+_job_id)
+		_driver_actual = cursor.fetchone()	
+		if(_driver_current_accessor==_driver_actual)
+			## go to endpoint for canceling and completing a job
+			cursor.close()
+			conn.close()
+			return render_template('can_comp.html')
+		cursor.close()
+		conn.close()
+		return render_template('taken.html',...) #add aditional info
+	
 
