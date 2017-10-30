@@ -54,7 +54,7 @@ if (isset($_POST['Submit']))
     //Execute the request
     $result = json_decode(curl_exec($ch));
     if (isset($result)) {
-        if ($result->{"status"} == "success"){
+        if ($result->status == 'success'){
             echo "<h4>Sucessful registration. Welcome to Dispatcher, ".$_POST['first_name']."!</h4>";
            
         }

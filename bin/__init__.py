@@ -1,4 +1,4 @@
-import json, urllib
+import json, urllib, random, string
 from flask import Flask
 from flask import request
 from flask import jsonify
@@ -6,7 +6,7 @@ from flask_mysqldb import MySQL
 import bin.sms.send_sms
 #import hashlib
 app = Flask(__name__)
-
+do_sms = False
 
 #MySQL Connection
 mysql = MySQL()
@@ -80,12 +80,13 @@ def register_driver():
         cursor = mysql.connection.cursor()
         cursor.callproc('new_driver',(_firstName, _lastName, _phoneNumber))
         data = cursor.fetchall()
- 
+        cursor.close()
         #we are not expecting any data in response except in error
         if len(data) is not 0:
             res = jsonify(data[0])
             #res = jsonify({'status':str(data[0]),
             #               'message':str(data[1])})
+            mysql.connection.rollback()
         else:
             #commit changes to DB
             mysql.connection.commit()
@@ -94,7 +95,67 @@ def register_driver():
         res = jsonify({'status':str(e)})
     return res
 
+@app.route("/deregister_driver", methods=['POST'])
+def deregister_driver():
+    try:
+        _key = request.form.get('key')
+        _conf_code = request.form.get('conf_code')
+        
+        cursor = mysql.connection.cursor()
+        cursor.callproc('check_confirm_code',[_key, _conf_code])
+        data = cursor.fetchall()
+        cursor.close()
+        if len(data) is not 0:
+            res = "invalid combo"
+            mysql.connection.rollback()
+        else:
+            mysql.connection.commit()
+            #TODO: grab all info about businesses that have hired this driver, display in form with checkboxes
+            #   Display "deregister from dispatcher as a whole" button
+        
+        
+    except Exception as e:
+        res = jsonify({'status':str(e)})
+    return res
 
+
+@app.route("/confirm_code", methods=['POST'])
+def confirm_code():
+    try:
+        _phoneNumber = request.get_json().get('phone_number','')
+        
+        #Connect to DB, call stored proc, close is handled automatically?
+        cursor = mysql.connection.cursor()
+        cursor.callproc('get_driver',[_phoneNumber])
+        data = cursor.fetchall()
+        cursor.close() 
+        if len(data) is 0:
+            res = jsonify({'status':'error','message':'Empty response'})
+            mysql.connection.rollback()
+        elif 'status' in data[0]: #status only in error state
+            res = jsonify(data[0])
+            mysql.connection.rollback()
+        else:
+            id_driver = data[0].get('idDriver')
+            conf_code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+            cursor = mysql.connection.cursor()
+            cursor.callproc('new_confirm_code',[id_driver, conf_code])
+            data = cursor.fetchall()
+            cursor.close()
+            if len(data) is 0:
+                res = jsonify({'status':'error','message':'Empty response'})
+                mysql.connection.rollback()
+            else:
+                if do_sms:
+                    sms.send_sms.send(_phoneNumber, 'Your Dispatcher Confirmation Code: \n'+conf_code)
+                res = jsonify(data[0])
+                mysql.connection.commit()
+
+    except Exception as e:
+        res = jsonify({'status':str(e)})
+    return res
+    
+    
 if __name__ == "__main__":
     app.run(debug=True)
 
