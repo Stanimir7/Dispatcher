@@ -1,3 +1,0 @@
-def myProc():
-	print("run")
-

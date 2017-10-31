@@ -1,26 +1,34 @@
-<html>
-	<head>
-		<title>{{_bus_name}} - Job</title>
-	</head>
-	<body>
-		<h1>Job Available for {{_bus_name}}</h1>
-		{% if _job_title %}
-		<h2>{{_job_title}}</h2>
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="w3-container">
+	<div class="w3-card-4">
+		<div class="w3-container w3-blue">
+                <h2>Dispatcher Job</h2>
+        </div>
+		<h1>Job Available for {{bus_name}}</h1>
+		{% if job_title %}
+		<h2>Job Title: {{job_title}}</h2>
 		{% endif %}
 		<p>
-		{% if _job_desc %}
-		{{_job_desc}}<br/>
+		{% if job_desc %}
+		{{job_desc}}<br/>
 		{% endif %}
-		{% if _from_loc %}
-		from:{{_from_loc}}<br/>
+		{% if from_loc %}
+		from:{{from_loc}}<br/>
 		{% endif %}
-		{% if _to_loc %}
-		to:{{_to_loc}}<br/>
+		{% if to_loc %}
+		to:{{to_loc}}<br/>
 		{% endif %}
-		{% if _bus_phone %}
-		for more info, call:{{_bus_phone}}
+		{% if bus_phone %}
+		for more info, call:{{bus_phone}}
 		{% endif %}
 		</p>
-		<button type="submit" formmethod="post" formaction="/claim">Claim Job</button>
-	</body>
-</html>
+		<form id='claim_form' action='/dispatcher/claim_job' method='post' accept-charset='UTF-8' class="w3-container">
+			<input type='hidden' name='unique_url' id='unique_url' value="{{ unique_url }}"/>
+			<span class="w3-container"><input type='submit' name='Claim' value='claim' class="w3-btn w3-blue" /></span>
+		</form>
+		<br>
+	</div>
+</div>
+{% endblock %}
