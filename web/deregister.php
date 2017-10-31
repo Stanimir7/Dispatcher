@@ -55,7 +55,7 @@ if (isset($_POST['Submit']))
 			//TODO: possibly do a pre-check before forwarding browser to flask endpoint
 			?>
 			<p>A code has been sent to the phone number, enter the confirmation code below.</p>
-			<form id='conf_form' action='/dispatcher/deregister_driver' method='post' accept-charset='UTF-8' class="w3-container">
+			<form id='conf_form' action='/dispatcher/format_deregister_driver' method='post' accept-charset='UTF-8' class="w3-container">
 				<input type='hidden' name='key' id='key' value="<?php echo $result->key; ?>"/>
                 <label for='conf_code' >Confirmation Code*:</label>
                     <input type='text' name='conf_code' id='conf_code' maxlength="50" class="w3-input w3-border" />
@@ -70,7 +70,7 @@ if (isset($_POST['Submit']))
         else {
             echo "<h3>Error</h3>";
             echo "<p>".$result->message."</p>";
-            var_dump($result);
+            #var_dump($result);
         }
     } else
         echo "Empty response. Panic.";

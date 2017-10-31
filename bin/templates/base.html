@@ -1,0 +1,13 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - Dispatcher</title>
+    {% else %}
+    <title>Dispatcher</title>
+    {% endif %}
+    <link rel="stylesheet" href="/css/w3.css">
+  </head>
+  <body>
+    {% block content %}{% endblock %}
+  </body>
+</html>
