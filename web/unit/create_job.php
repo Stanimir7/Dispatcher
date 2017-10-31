@@ -3,15 +3,19 @@
 
 
 //API Url
-$url = '/dispatcher/create_job';
+$url = 'localhost/dispatcher/create_job';
  
 //Initiate cURL.
 $ch = curl_init($url);
  
 //The JSON data.
 $jsonData = array(
-    'job_title' => 'Justin\'s Driver',
-    'job_desc' => 'asdf'
+    'merch_id' => '1',
+    'job_title' => 'Driver',
+    'job_desc' => 'asdf',
+    'from_loc' => '123 Lane',
+    'to_loc' => '44566 street',
+    'bus_phone' => '098'
 );
  
 //Encode the array into JSON.
