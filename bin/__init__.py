@@ -4,7 +4,7 @@ from flask import request
 from flask import jsonify
 from flask.ext.mysql import MySQL
 import bin.sms.send_sms
-import bin.business.register_business
+import bin.register_business
 #import hashlib
 app = Flask(__name__)
 
