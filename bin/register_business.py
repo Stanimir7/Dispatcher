@@ -2,7 +2,7 @@ import json, urllib
 from flask import Flask
 from flask import request
 from flask import jsonify
-from flask.ext.mysql import MySQL
+from flask_mysqldb import MySQL
 import bin.sms.send_sms
 #import hashlib
 app = Flask(__name__)
@@ -16,7 +16,7 @@ app.config['MYSQL_USER'] = 'dispatcher'
 app.config['MYSQL_PASSWORD'] = 'dispatcher'
 app.config['MYSQL_DB'] = 'dispatcher'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_CURSORCLASS'] = 
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql.init_app(app)
 
 @app.route("/register_business", methods=['GET', 'POST'])
