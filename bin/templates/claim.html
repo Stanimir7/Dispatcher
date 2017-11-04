@@ -10,20 +10,20 @@
 		{% if job_title %}
 		<h2>Job Title: {{job_title}}</h2>
 		{% endif %}
-		<p>
+		<p><b>
 		{% if job_desc %}
-		{{job_desc}}<br/>
+		{{job_desc}}<br>
 		{% endif %}
 		{% if from_loc %}
-		from:{{from_loc}}<br/>
+		from:{{from_loc}}<br>
 		{% endif %}
 		{% if to_loc %}
-		to:{{to_loc}}<br/>
+		to:{{to_loc}}<br>
 		{% endif %}
 		{% if bus_phone %}
 		for more info, call:{{bus_phone}}
 		{% endif %}
-		</p>
+		</b></p>
 		<form id='claim_form' action='/dispatcher/claim_job' method='post' accept-charset='UTF-8' class="w3-container">
 			<input type='hidden' name='unique_url' id='unique_url' value="{{ unique_url }}"/>
 			<span class="w3-container"><input type='submit' name='Claim' value='claim' class="w3-btn w3-blue" /></span>
