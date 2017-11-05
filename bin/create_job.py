@@ -1,19 +1,6 @@
-import json,urllib
-from flask import Flask, request, jsonify, render_template, url_for, redirect
-from flask_mysqldb import MySQL
-from bin import app
-import bin.sms.send_sms
-import random,string
-
-do_sms = False
-
-#mysql=MySQL()
-#app.config['MYSQL_USER'] = 'dispatcher'
-#app.config['MYSQL_PASSWORD'] = 'dispatcher'
-#app.config['MYSQL_DB'] = 'dispatcher'
-#app.config['MYSQL_HOST'] = 'localhost'
-#app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-#mysql.init_app(app)
+import json, urllib, random, string
+from flask import request, jsonify, render_template, url_for, redirect
+from bin import sms, app, mysql, do_sms
 
 @app.route("/create_job", methods=['POST','GET'])
 def create_job():
