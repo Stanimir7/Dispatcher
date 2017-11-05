@@ -91,20 +91,11 @@ def claim_page(unique_url):
         cursor.callproc('job_avail',[data_url[0].get('idJob')])
         data = cursor.fetchall()
         cursor.close()
-       	mysql.connection.commit() 
-
         if data[0].get('avail') == 'false':	    
-	
-            cursor = mysql.connection.cursor()
-            cursor.callproc('get_assoc_job_driver',[data_url[0].get('idJob')])
-            driver = cursor.fetchall()
-            cursor.close()
-            mysql.connection.commit()
-
-            if data_url[0].get('idDriver') == driver.get('idDriver'):
+           if(data_url[0].get('idDriver') == data[0].get('idAssignedDriver'):
                 #this is the driver that has claimed the job, allow them to cancel or complete job
                 return render_template('cancel_complete.html',unique_url = unique_url)
-            else:
+            else
                 return render_template('message.html',
                            title='Job Taken',
                            message='Sorry, this job has been claimed. ')
