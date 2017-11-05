@@ -1,6 +1,7 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template, url_for, redirect
-from bin import sms, app, mysql, do_sms
+from bin import app, mysql, do_sms
+from bin.sms import send_sms
 
 @app.route("/create_job", methods=['POST','GET'])
 def create_job():
@@ -57,7 +58,7 @@ def create_job():
             body_link=url_for('claim_page',unique_url=unique_url)
             body=body+" Claim link: "+body_link
             if do_sms:
-                sms.send_sms.send(num, body)
+                send_sms.send(row.get('PhoneNumber'), body)
                 
             res = res + '|' + body
     except Exception as e:
