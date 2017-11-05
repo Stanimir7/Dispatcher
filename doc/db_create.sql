@@ -208,7 +208,6 @@ BEGIN
         );
         
 		SELECT Driver.idDriver, Driver.PhoneNumber, LAST_INSERT_ID() AS 'idJob', 'success' AS 'status'  
-
         FROM Driver 
         WHERE Driver.idDriver IN (
 				SELECT BusinessDriver.fk_idDriver 
@@ -316,13 +315,11 @@ CREATE PROCEDURE `new_driver` (
 	
 )
 BEGIN
-
 	IF ( SELECT EXISTS (SELECT 1 FROM Driver WHERE PhoneNumber = p_phone AND Enrolled = TRUE) ) THEN
 		SELECT 'error' AS 'status', 'Driver already registered' AS 'message';
 	
     ELSEIF ( SELECT EXISTS (SELECT 1 FROM Driver WHERE PhoneNumber = p_phone AND Enrolled = FALSE) ) THEN
 		UPDATE Driver SET FirstName = p_firstName, LastName = p_lastName, Enrolled = TRUE WHERE PhoneNumber = p_phone;
-	
 	
 
     ELSE
@@ -581,6 +578,7 @@ END$$
 
 DELIMITER ;
 
+
 -- -----------------------------------------------------
 -- procedure get_business
 -- -----------------------------------------------------
@@ -681,8 +679,6 @@ END
 $$
 
 DELIMITER ;
-
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

@@ -7,8 +7,6 @@ app = Flask(__name__)
 #SMS Flag
 do_sms = True
 
- 
-
 ### MySQL ###
 mysql = MySQL()
 app.config['MYSQL_USER'] = 'dispatcher'
@@ -28,5 +26,6 @@ if __name__ == "__main__":
     
     
 ### Modules ###
-from bin import create_job, register_business
+from bin import create_job, register_business, driver_management, util
+
 
