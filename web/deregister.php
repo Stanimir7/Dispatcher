@@ -69,6 +69,9 @@ if (isset($_POST['Submit']))
         }
         else {
             echo "<h3>Error</h3>";
+			if (empty($result->message)){
+				echo "<p>Whoops, something went wrong. Please try again.</p>";
+			} else
             echo "<p>".$result->message."</p>";
             #var_dump($result);
         }

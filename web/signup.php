@@ -65,7 +65,7 @@ if (isset($_POST['Submit']))
             #var_dump($result);
         }
     } else
-        echo "Empty response. Panic.";
+        echo "Whoops, something went wrong.";
     #if(curl_errno($ch))
     #    echo curl_error($ch);
      echo '<span class="w3-container"><a href="signup.php" class="w3-btn w3-blue">Go Back</a></span>';
