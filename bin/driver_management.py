@@ -1,6 +1,6 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template
-from bin import sms, app, mysql, do_sms
+from bin import app, mysql
 
 
 @app.route("/register_driver", methods=['POST'])
