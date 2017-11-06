@@ -21,7 +21,7 @@ def create_job():
         
         if len(data) is 0:
             mysql.connection.rollback()
-            return jsonify({'status': 'error','message': 'Empty DB Response'})
+            return jsonify({'status': 'error','message': 'Empty DB Response1'})
         mysql.connection.commit()
         _bus_name=data[0].get('BusName')
         body="New Job from "+ _bus_name
@@ -32,7 +32,7 @@ def create_job():
         cursor.close()
         if len(data_create_job) is 0:
             mysql.connection.rollback()
-            return jsonify({'status': 'error','message': 'Empty DB Response'})
+            return jsonify({'status': 'error','message': 'Empty DB Response2'})
         elif data_create_job[0].get('status') == 'error': 
             mysql.connection.rollback()
             return jsonify(data_create_job[0])
@@ -49,7 +49,7 @@ def create_job():
             cursor.close()
             if len(data) is 0:
                 mysql.connection.rollback()
-                return jsonify({'status': 'error','message': 'Empty DB Response'})
+                return jsonify({'status': 'error','message': 'Empty DB Response3'})
             elif data[0].get('status') == 'error': 
                 mysql.connection.rollback()
                 return jsonify(data_create_job[0])
