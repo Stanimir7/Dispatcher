@@ -126,9 +126,10 @@ def claim_page(unique_url):
     
 @app.route("/claim_job",methods=["POST","GET"])
 def claim_job():
-    #TODO this is not complete
-    #if not request.form.get('submit')
-        #return
+    if not request.form.get('claim'):
+        return render_template('message.html',
+                       title='Whoops',
+                       message='Don\'t try to access this page directly')
     unique_url = request.form.get('unique_url')
     
     cursor = mysql.connection.cursor()
@@ -148,9 +149,52 @@ def claim_job():
     #Assume success if not error at this point
     mysql.connection.commit()
     
-    #you now have all info through data_url
-    
-    
+    cursor = mysql.connection.cursor()
+    cursor.callproc('driver_claim_job',[data_url[0].get('idJob'), data_url[0].get('idDriver')])
+    response = cursor.fetchall()
+    cursor.close()
+    if len(response) is 0:
+        mysql.connection.rollback()
+        return render_template('message.html',
+                       title='Whoops',
+                       message='Something went wrong, please try again.')
+    elif response.get('status') == 'error':
+        mysql.connection.rollback()
+        if response.get('message') == 'invalid_driver_id':
+            return render_template('message.html',
+                           title='Whoops',
+                           message='Are you sure you are who you say you are?')
+        elif response.get('message') == 'invalid_job_id':
+            return render_template('message.html',
+                           title='Whoops',
+                           message='What job are you trying to claim exactly?')
+        #should never get here
+        return render_template('message.html',
+                       title='Whoops',
+                       message='Something went wrong, please try again.')
+
+    #Assume success if not error at this point
+    mysql.connection.commit()
+    if response.get('status') == 'success':
+        return render_template('message.html',
+                       title='Job claimed',
+                       message='You have claimed the job')
+
+    if response.get('status') == 'info':
+        if response.get('message') == 'job_claimed':
+            return render_template('message.html',
+                           title='Job is not available',
+                           message='Sorry, someone else has claimed the job')
+        elif response.get('message') == 'job_not_available':
+            return render_template('message.html',
+                           title='Job is not available',
+                           message='Sorry, this job is no longer available')
+        #should never get here
+        return render_template('message.html',
+                       title='Whoops',
+                       message='Something went wrong, please try again.')
+
+    #should never get here
     return str(data_url)
     
 
