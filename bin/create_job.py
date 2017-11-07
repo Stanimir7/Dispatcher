@@ -126,7 +126,7 @@ def claim_page(unique_url):
     
 @app.route("/claim_job",methods=["POST","GET"])
 def claim_job():
-    if not request.form.get('claim'):
+    if request.form.get('claim') is not None:
         return render_template('message.html',
                        title='Whoops',
                        message='Don\'t try to access this page directly')
