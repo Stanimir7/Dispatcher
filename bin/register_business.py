@@ -26,7 +26,7 @@ def register_business():
         #TODO: display the meaningful error:
         #data[0].get('message')
         mysql.connection.rollback()
-        return jsonify({'status':'error: ' + str(data[1])})
+        return jsonify({'status':'error: ' + str(data[0].get('message'))})
     
     #commit changes to DB
     mysql.connection.commit()
