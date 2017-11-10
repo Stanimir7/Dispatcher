@@ -11,6 +11,11 @@ def register_business():
     _phoneNum=  request.get_json().get('phone_num','')
     _address=  request.get_json().get('merch_address','')
     
+    #Generates a unique url based on the phone number of the business
+    _unique_url = ''
+     for char in _phoneNum:
+            unique_url = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(8))
+
     cursor = mysql.connection.cursor()
     #call database stored proc
     #CALL `dispatcher`.`new_business`(<{IN p_merch_id CHAR(32)}>, <{IN p_name VARCHAR(128)}>, <{IN p_address VARCHAR(256)}>, <{IN p_phone CHAR(15)}>);
