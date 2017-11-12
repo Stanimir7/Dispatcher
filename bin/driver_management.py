@@ -156,3 +156,46 @@ def perform_deregister_driver():
     return 'end' #should never get here
 
     
+@app.route("/register_driver/<unique_url>", methods=['GET','POST'])
+def register_driver_w_business(unique_url):
+    try:
+        _phoneNumber = request.get_json().get('phone_number','')
+
+        #get driver from phone number
+        cursor = mysql.connection.cursor()
+        cursor.callproc('get_driver', _phoneNumber)
+        id_driver = cursor.fetchall()
+        cursor.close()
+
+        if len(id_driver) is 0:
+            mysql.connection.rollback()
+            return render_template('message.html', 
+                                   title='Whoops',
+                                   message='Please register with our service before trying to register with any businesses')
+
+        #get business from unique_url
+        cursor = mysql.connection.cursor()
+        cursor.callproc('get_business', unique_url)
+        id_business = cursor.fetchall()
+        cursor.close()
+
+        if len(id_business) is 0:
+            mysql.connection.rollback()
+            return render_template('message.html', 
+                                    title='Whoops'
+                                    message='Something went wrong, please try again.')
+
+        cursor = mysql.connection.cursor()
+        cursor.callproc('new_business_driver', id_driver, id_business)
+        cursor.close()
+        mysql.connection.commit()
+
+        return render_template('message.html', 
+                                title='Succesful registration',
+                                message='You have succesfuly registered with' + id_business[1])
+
+
+    except Exception as e:
+        return jsonify({'status':str(e)})
+
+    return 'end' #should never get here
