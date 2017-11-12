@@ -86,14 +86,8 @@ def claim_page(unique_url):
                            message='Something went wrong, please try again.' + data_url[0].get('message'))
         #Assume success if not error at this point
         mysql.connection.commit()
-        
-        cursor = mysql.connection.cursor()
-        cursor.callproc('job_avail',[data_url[0].get('idJob')])
-        data = cursor.fetchall()
-        cursor.close()
-       	mysql.connection.commit() 
 
-        if data[0].get('avail') == 'false':	    
+        if data_url[0].get('JobStatus') != 'pending':	    
 	
             cursor = mysql.connection.cursor()
             cursor.callproc('get_assoc_job_driver',[data_url[0].get('idJob')])
@@ -108,7 +102,7 @@ def claim_page(unique_url):
                 return render_template('message.html',
                            title='Job Taken',
                            message='Sorry, this job has been claimed. ')
-        elif data[0].get('avail') == 'true':    
+        elif data_url[0].get('JobStatus') == 'pending':    
             return render_template('claim.html',
                            title='Claim Job',
                            bus_name=data_url[0].get('BusName'),
@@ -176,9 +170,7 @@ def claim_job():
     #Assume success if not error at this point
     mysql.connection.commit()
     if response[0].get('status') == 'success':
-        return render_template('message.html',
-                       title='Job claimed',
-                       message='You have claimed the job')
+        return render_template('cancel_complete.html',unique_url = unique_url)
 
     if response[0].get('status') == 'info':
         if response[0].get('message') == 'job_claimed':
@@ -196,3 +188,85 @@ def claim_job():
 
     #should never get here
     return str(data_url)
+
+@app.route("/driver_close/<unique_url>/<status>", methods=["POST"])
+def driver_close(unique_url,status):
+    cursor = mysql.connection.cursor()
+    cursor.callproc('get_job_driver_from_url',[unique_url)
+    data_url = cursor.fetchall()
+    cursor.close()
+    if len(data_url) is 0:
+        mysql.connection.rollback()
+        return render_template('message.html',
+                       title='Whoops',
+                       message='Something went wrong, please try again.')
+    elif data_url[0].get('status') == 'error':
+        mysql.connection.rollback()
+        return render_template('message.html',
+                       title='Whoops',
+                       message='Something went wrong, please try again. '+ data_url[0].get('message'))
+    #Assume success if not error at this point
+    mysql.connection.commit()
+     
+    cursor = mysql.connection.cursor()
+    cursor.callproc('get_assoc_job_driver',[data_url[0].get('idJob')])
+    driver = cursor.fetchall()
+    cursor.close()
+    if len(driver) is 0:
+        mysql.connection.rollback()
+        return render_template('message.html',
+                       title='Whoops',
+                       message='Something went wrong, please try again.')
+    elif driver[0].get('status') == 'error':
+        mysql.connection.rollback()
+        return render_template('message.html',
+                       title='Whoops',
+                       message='Something went wrong, please try again. '+ driver[0].get('message'))
+    mysql.connection.commit()
+    
+    if data_url[0].get('idDriver') == driver[0].get('idDriver'):
+        #this is the driver that has claimed the job, he should be allowed to cancel it
+        if data_url[0].get('JobStatus') == 'claimed'
+           #the job is claimed, not pending, complete, or canceled. Allow to cancel job
+           cursor = mysql.connection.cursor()
+           cursor.callproc('driver_close_job',[data_url[0].get('idDriver'),data_url[0].get('idJob'),status])
+           isClosed = cursor.fetchall()
+           cursor.close()
+           if len(isClosed) is 0:
+               mysql.connection.rollback()
+               return render_template('message.html',
+                              title='Whoops',
+                              message='Something went wrong, please try again.')
+           elif isClosed[0].get('status') == 'error':
+               mysql.connection.rollback()
+               return render_template('message.html',
+                              title='Whoops',
+                              message='Something went wrong, please try again. ' isClosed[0].get('message'))
+           mysql.connection.commit()
+           #cancled closed successfully
+           if status == 'cancel': #if canceled in error, allow them to claim it again
+               return render_template('claim.html',
+                              title='Claim Job',
+                              bus_name=data_url[0].get('BusName'),
+                              job_title=data_url[0].get('JobTitle'),
+                              job_desc=data_url[0].get('JobDesc'),
+                              from_loc=data_url[0].get('FromLoc'),
+                              to_loc=data_url[0].get('ToLoc'),
+                              bus_phone=data_url[0].get('BusContactPhone'),
+                              #Driver's identifying info
+                              unique_url=unique_url)
+           elif status == 'complete':
+               return render_template('message.html',
+                              title='Job completed',
+                              message='Job has been completed.')
+        else:
+           #if Job Status is not "claimed"
+           return render_template('message.html',
+                          title='Whoops',
+                          message='Something went wrong, you\'re trying to cancel a job that has not been claimed')
+    else:
+        #this is not the driver that has claimed the job
+        return render_template('message.html'
+                       title='Whoops',
+                       message='You are not the driver that has claimed this job, how did you get here?')  
+    
