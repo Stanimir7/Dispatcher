@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block nav_extension %}
+    <!--Tabs-->
+    <div class="nav-content">
+      <ul class="tabs tabs-transparent teal">
+        <li class="tab"><a class="active" href="#jobs">Jobs</a></li>
+        <li class="tab"><a href="#drivers">Drivers</a></li>
+        <!--<li class="tab"><a href="#test4">Test 3</a></li>-->
+      </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <!-- Job Tab -->
+    <div id="jobs" class="col s12">
+        Jobs Here
+          <div class="fixed-action-btn">
+            <a class="btn-floating btn-large waves-effect waves-light yellow darken-3 modal-trigger" href="#modal1">
+              <i class="large material-icons">mode_edit</i>
+            </a>
+          </div>
+          <!-- Modal Structure -->
+          <div id="modal1" class="modal modal-fixed-footer">
+            <div class="modal-content">
+              <h4>Modal Header</h4>
+              <p>A bunch of text</p>
+            </div>
+            <div class="modal-footer">
+              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+            </div>
+          </div>
+    </div>
+    
+    <!-- Driver Tab -->
+    <div id="drivers" class="col s12">
+        Drivers here
+        
+    </div>
+
+{% endblock %}

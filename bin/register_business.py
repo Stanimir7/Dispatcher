@@ -14,7 +14,7 @@ def register_business():
     cursor = mysql.connection.cursor()
     #call database stored proc
     #CALL `dispatcher`.`new_business`(<{IN p_merch_id CHAR(32)}>, <{IN p_name VARCHAR(128)}>, <{IN p_address VARCHAR(256)}>, <{IN p_phone CHAR(15)}>);
-    cursor.callproc('new_business',[_merchID,_merchName,_address,_phoneNum])
+    cursor.callproc('new_business',[_merchID,_merchName,_address,_phoneNum,''])
     
     data = cursor.fetchall()
     cursor.close()

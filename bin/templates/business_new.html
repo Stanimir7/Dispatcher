@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block nav_extension %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <br />
+    <div class="card">
+        <div class="card-content">
+          <span class="card-title">New Merchant Registration</span>
+          
+          <div id="form_wrap" class="row">
+            <form id="form_business_new" class="col s12">
+              <div class="row">
+                
+                <div class="input-field col s2">
+                  <input placeholder="TEMPORARY FIELD" name="merch_id" type="text" class="validate">
+                  <label for="merch_id">Clover Merchant ID</label>
+                </div>
+                <div class="input-field col s10">
+                  <input name="merch_name" type="text" class="validate">
+                  <label for="merch_name">Merchant Name</label>
+                </div>
+                <div class="input-field col s6">
+                  <input name="phone_num" type="text" class="validate">
+                  <label for="phone_num">Phone Number</label>
+                </div>
+                <div class="input-field col s6">
+                  <input name="merch_address" type="text" class="validate">
+                  <label for="merch_address">Address</label>
+                </div>
+                
+                 <input class="btn waves-effect waves-light" type="submit" >
+                
+              </div>
+            </form>
+        </div>
+          
+        <div style="display: none" id="load_wrap" class="progress">
+            <div class="indeterminate"></div>
+        </div>
+        
+        <div style="display: none" id="finish_wrap" >
+            <h5>Success</h5>
+        </div>
+          
+        </div>
+    </div>
+</div>
+    
+
+
+{% endblock %}
+
+
+{% block script_extension %}
+    <script type="text/javascript">
+    $( "#form_business_new" ).submit(function( event ) {
+        
+        var formData = JSON.stringify(objectifyForm($("#form_business_new").serializeArray()));
+        $("#form_wrap").hide();
+        $("#load_wrap").show();
+        $.ajax({
+          type: "POST",
+          url: "/dispatcher/register_business",
+          data: formData,
+          dataType: "json",
+          contentType : "application/json",
+          success: function(responseData){
+            $("#load_wrap").hide();
+            $("#finish_wrap").show();
+            
+            },
+          error: function (errormessage) {
+                //do something else
+            }
+        });
+        
+        event.preventDefault();
+        event.stopImmediatePropagation()
+    });
+    </script>
+
+{% endblock %}
