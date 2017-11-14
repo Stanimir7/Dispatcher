@@ -13,7 +13,7 @@ def cancel_job():
   cursor = mysql.connection.cursor()
   
   #CALL `dispatcher`.`driver_close_job`(<{IN p_idDriver INT}>, <{IN p_idJob INT}>, <{IN p_status ENUM('complete', 'canceled')}>);	
-  cursor.callproc('driver_close_job', [driver_id, job_id, ENUM('canceled')])
+  cursor.callproc('driver_close_job', [driver_id, job_id, 'canceled'])
   
   data = cursor.fetchall()
   cursor.close()
@@ -41,7 +41,7 @@ def completed_job():
   cursor = mysql.connection.cursor()
   
   #CALL `dispatcher`.`driver_close_job`(<{IN p_idDriver INT}>, <{IN p_idJob INT}>, <{IN p_status ENUM('complete', 'canceled')}>);	
-  cursor.callproc('driver_close_job', [driver_id, job_id, ENUM('complete')])
+  cursor.callproc('driver_close_job', [driver_id, job_id, 'complete'])
   
   data = cursor.fetchall()
   cursor.close()
