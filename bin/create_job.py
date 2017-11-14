@@ -261,7 +261,7 @@ def driver_close(unique_url,status):
                mysql.connection.commit()
                for row in data_create_job:
                    cursor = mysql.connection.cursor()
-                   cursor.callproc('get_url_from_driver_job',[row.get('idDriver'),data_url.get('idJob')])
+                   cursor.callproc('get_url_from_driver_job',[row.get('idDriver'),data_url[0].get('idJob')])
                    url = cursor.fetchall()
                    cursor.close()
                    if len(url) is 0:
