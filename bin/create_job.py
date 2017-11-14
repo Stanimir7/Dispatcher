@@ -189,10 +189,13 @@ def claim_job():
     #should never get here
     return str(data_url)
 
-@app.route("/driver_close/<unique_url>/<status>", methods=["POST"])
+@app.route("/driver_close", methods=["POST","GET"])
 def driver_close(unique_url,status):
+    unique_url = request.form.get('unique_url')
+    status = request.form.get('status')
+
     cursor = mysql.connection.cursor()
-    cursor.callproc('get_job_driver_from_url',[unique_url)
+    cursor.callproc('get_job_driver_from_url',[unique_url])
     data_url = cursor.fetchall()
     cursor.close()
     if len(data_url) is 0:
@@ -227,7 +230,7 @@ def driver_close(unique_url,status):
     if data_url[0].get('idDriver') == driver[0].get('idDriver'):
         #this is the driver that has claimed the job, he should be allowed to cancel it
         if data_url[0].get('JobStatus') == 'claimed'
-           #the job is claimed, not pending, complete, or canceled. Allow to cancel job
+           #the job is claimed, not pending, complete, or canceled. Allow to cancel or complete it
            cursor = mysql.connection.cursor()
            cursor.callproc('driver_close_job',[data_url[0].get('idDriver'),data_url[0].get('idJob'),status])
            isClosed = cursor.fetchall()
@@ -244,8 +247,34 @@ def driver_close(unique_url,status):
                               message='Something went wrong, please try again. ' isClosed[0].get('message'))
            mysql.connection.commit()
            #cancled closed successfully
-           if status == 'cancel': #if canceled in error, allow them to claim it again
-               return render_template('claim.html',
+           if status == 'canceled': #if canceled resend text to all drivers who had gotten the url
+               cursor = mysql.connection.cursor()
+               cursor.callproc('get_assoc_drivers',[data_url[0].get('idBusiness')]
+               list_of_drivers = cursor.fetchall()
+               cursor.close()
+               if len(list_of_drivers) is 0:
+                   mysql.connection.rollback()
+                   return render_template('message.html',
+                                  title='Whoops',
+                                  message='Something went wrong, there are no drivers to inform of this job becoming available again. Please contact the business at '+ data_url[0].get('DefaultPhone'))
+               #assume you have a list of drivers
+               mysql.connection.commit()
+               for row in data_create_job:
+                   cursor = mysql.connection.cursor()
+                   cursor.callproc('get_url_from_driver_job',[row.get('idDriver'),data_url.get('idJob')])
+                   url = cursor.fetchall()
+                   cursor.close()
+                   if len(url) is 0:
+                       mysql.connection.rollback()
+                       #if you can't find a url for this job for this driver, skip them
+                   #assume you have the url
+                   mysql.connection.commit()
+                   body_link=url_for('claim_page',unique_url=url[0].get('URL'))
+                   body="This job has opened up again, claim link: "+body_link
+                   if do_sms:
+                       send_sms.send(row.get('PhoneNumber'), body)
+
+               return render_template('claim.html', #if canceled in error, allow them to claim again and return them to the claim page
                               title='Claim Job',
                               bus_name=data_url[0].get('BusName'),
                               job_title=data_url[0].get('JobTitle'),
