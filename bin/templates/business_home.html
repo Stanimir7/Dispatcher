@@ -14,7 +14,37 @@
 {% block content %}
     <!-- Job Tab -->
     <div id="jobs" class="col s12">
-        Jobs List Here
+      <table class="striped highlight-yellow">
+        <thead>
+          <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Destination</th>
+          </tr>
+        </thead>
+      
+        <tbody>
+          <tr>
+            <td>Best Job Title</td>
+            <td>pending</td>
+            <td>123 Grape Street</td>
+          </tr>
+          <tr>
+            <td>Another Title</td>
+            <td>claimed</td>
+            <td>456 Apple Lane</td>
+          </tr>
+          <tr>
+            <td>My Title</td>
+            <td>claimed</td>
+            <td>789 OhNo Blvd</td>
+          </tr>
+        </tbody>
+      </table>
+            
+        
+        
+        <!-- Create Job Button -->
           <div class="fixed-action-btn">
             <a class="btn-floating btn-large waves-effect waves-light yellow darken-3 modal-trigger" href="#create_job_modal">
               <i class="large material-icons">add</i>
@@ -25,6 +55,7 @@
           <!-- Create Job Dialog -->
           <div id="create_job_modal" class="modal modal-fixed-footer">
             <div class="modal-content">
+                <button class="modal-action modal-close waves-effect waves-red btn-flat" style="position:absolute;top:0;right:0;"><i class="material-icons">close</i></button>
                 <form id="form_create_job" class="col s12">
                   <div class="row">
                     
@@ -57,7 +88,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-              <button href="#!" class="modal-action modal-close waves-effect waves-green btn-flat " type="submit" form="form_create_job">Submit</button>
+              <button href="#!" class="modal-action modal-close waves-effect waves-green btn " type="submit" form="form_create_job">Submit</button>
+              
             </div>
           </div>
     </div>

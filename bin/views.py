@@ -13,4 +13,10 @@ def business_home():
 def business_new():
     
     return render_template('business_new.html',
-                           title='Home')
+                           title='Merchant Registration')
+
+@app.route("/view_job_detail", methods=['GET'])
+def view_job_detail():
+    
+    return render_template('job_detail.html',
+                           title='Job Detail')
