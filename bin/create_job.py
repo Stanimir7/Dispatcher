@@ -229,7 +229,7 @@ def driver_close(unique_url,status):
     
     if data_url[0].get('idDriver') == driver[0].get('idDriver'):
         #this is the driver that has claimed the job, he should be allowed to cancel it
-        if data_url[0].get('JobStatus') == 'claimed'
+        if data_url[0].get('JobStatus') == 'claimed':
            #the job is claimed, not pending, complete, or canceled. Allow to cancel or complete it
            cursor = mysql.connection.cursor()
            cursor.callproc('driver_close_job',[data_url[0].get('idDriver'),data_url[0].get('idJob'),status])
@@ -244,12 +244,12 @@ def driver_close(unique_url,status):
                mysql.connection.rollback()
                return render_template('message.html',
                               title='Whoops',
-                              message='Something went wrong, please try again. ' isClosed[0].get('message'))
+                              message='Something went wrong, please try again. '+ isClosed[0].get('message'))
            mysql.connection.commit()
            #cancled closed successfully
            if status == 'canceled': #if canceled resend text to all drivers who had gotten the url
                cursor = mysql.connection.cursor()
-               cursor.callproc('get_assoc_drivers',[data_url[0].get('idBusiness')]
+               cursor.callproc('get_assoc_drivers',[data_url[0].get('idBusiness')])
                list_of_drivers = cursor.fetchall()
                cursor.close()
                if len(list_of_drivers) is 0:
@@ -295,7 +295,7 @@ def driver_close(unique_url,status):
                           message='Something went wrong, you\'re trying to cancel a job that has not been claimed')
     else:
         #this is not the driver that has claimed the job
-        return render_template('message.html'
+        return render_template('message.html',
                        title='Whoops',
                        message='You are not the driver that has claimed this job, how did you get here?')  
     
