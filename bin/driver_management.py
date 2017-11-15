@@ -164,26 +164,30 @@ def register_driver_w_business(unique_url):
         #get driver from phone number
         cursor = mysql.connection.cursor()
         cursor.callproc('get_driver', _phoneNumber)
-        id_driver = cursor.fetchall()
+        data = cursor.fetchall()
         cursor.close()
 
-        if len(id_driver) is 0:
+        if len(data) is 0:
             mysql.connection.rollback()
             return render_template('message.html', 
                                    title='Whoops',
                                    message='Please register with our service before trying to register with any businesses')
+	elif data[0].get('status') == 'success':
+	    id_driver = data[0].get('idDriver')
 
         #get business from unique_url
         cursor = mysql.connection.cursor()
         cursor.callproc('get_business', unique_url)
-        id_business = cursor.fetchall()
+        data = cursor.fetchall()
         cursor.close()
 
-        if len(id_business) is 0:
+        if len(data) is 0:
             mysql.connection.rollback()
             return render_template('message.html', 
                                     title='Whoops'
                                     message='Something went wrong, please try again.')
+	elif data[0].get('status') == 'success':
+            id_business = data[0].get('idBusiness')
 
         cursor = mysql.connection.cursor()
         cursor.callproc('new_business_driver', id_driver, id_business)
@@ -193,7 +197,6 @@ def register_driver_w_business(unique_url):
         return render_template('message.html', 
                                 title='Succesful registration',
                                 message='You have succesfuly registered with' + id_business[1])
-
 
     except Exception as e:
         return jsonify({'status':str(e)})
