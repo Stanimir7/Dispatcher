@@ -13,7 +13,7 @@ def register_business():
     
     #Generates a unique url based on the phone number of the business
     _unique_url = ''
-     for char in _phoneNum:
+    for char in _phoneNum:
             unique_url = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(10))
 
     cursor = mysql.connection.cursor()
