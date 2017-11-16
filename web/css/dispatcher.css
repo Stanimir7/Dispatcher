@@ -1,0 +1,19 @@
+
+  body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+     
+
+.promo{width:100%}
+.promo i{margin:40px 0;color:#004d40;font-size:7rem;display:block}
+.promo-caption{font-size:1.7rem;font-weight:500;margin-top:5px;margin-bottom:0}
+
+table.highlight-yellow tbody tr:hover {
+    background-color: #b2dfdb;
+}

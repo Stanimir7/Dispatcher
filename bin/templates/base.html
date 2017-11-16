@@ -1,13 +1,84 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    {% if title %}
-    <title>{{ title }} - Dispatcher</title>
-    {% else %}
-    <title>Dispatcher</title>
-    {% endif %}
-    <link rel="stylesheet" href="/css/w3.css">
-  </head>
-  <body>
-    {% block content %}{% endblock %}
-  </body>
+<head>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+  
+  <!--Dispatcher Custom -->
+  <link type="text/css" rel="stylesheet" href="/css/dispatcher.css"  media="screen,projection"/>
+  
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  {% if title %}
+  <title>{{ title }} - Dispatcher</title>
+  {% else %}
+  <title>Dispatcher</title>
+  {% endif %}
+    
+</head>
+<body>
+  <header>
+        <nav class="nav-extended">
+            <div class="nav-wrapper teal">
+              <a href="#" class="brand-logo" style="margin-left:15px">Dispatcher</a>
+              <a href="#" data-activates="nav-mobile" class="button-collapse" style="color: #004d40"><i class="white-text material-icons">menu</i></a>
+              <ul class="right hide-on-med-and-down">
+                
+                <!--<li><a href="#" class="">Driver Tools</a></li>-->
+                <li><a href="/index.html" class="waves-effect waves-light btn yellow darken-3">Logout</a></li>
+              </ul>
+              
+              <!--Nav drawer content, only appears on small screen sizes-->
+              <ul class="side-nav" id="nav-mobile">
+                <h5 class="teal-text text-darken-3" style="margin-left:15px">Dispatcher</h5>
+                <hr>
+                <li><a href="/index.html" class="waves-effect waves-light btn teal darken-4">Logout</a></li>
+                 <!--<li><a href="#" class=" teal-text text-darken-3">Driver Tools</a></li>-->
+                
+              </ul>
+            </div>
+            
+            {% block nav_extension %}{% endblock %}   
+            
+        </nav>
+    </header>
+    
+    <main>
+      {% block content %}{% endblock %}   
+    </main>
+    
+    <!--
+    <footer class="page-footer grey lighten-3">
+        <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="grey-text">Footer Content</h5>
+                <p class="grey-text text-darken-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                
+                <ul>
+                  <li><a class="grey-text text-darken-4" href="#!">About us</a></li>
+                  <li><a class="grey-text text-darken-4" href="#!">Driver Sign-up</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <div class="footer-copyright">
+            <div class="container">
+                <p class="grey-text text-darken-4">&copy;2017 Don't steal and such</p>
+            </div>
+        </div>
+    </footer>
+  -->
+  
+  
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/js/materialize.min.js"></script>
+  <script type="text/javascript" src="/js/dispatcher.js"></script>
+  {% block script_extension %}{% endblock %}
+</body>
 </html>
