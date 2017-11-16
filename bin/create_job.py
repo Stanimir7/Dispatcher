@@ -254,7 +254,7 @@ def driver_close():
                                   message='Something went wrong, there are no drivers to inform of this job becoming available again. Please contact the business at '+ data_url[0].get('DefaultPhone'))
                #assume you have a list of drivers
                mysql.connection.commit()
-               for row in data_create_job:
+               for row in list_of_drivers:
                    cursor = mysql.connection.cursor()
                    cursor.callproc('get_url_from_driver_job',[row.get('idDriver'),data_url[0].get('idJob')])
                    url = cursor.fetchall()
