@@ -190,7 +190,7 @@ def claim_job():
     return str(data_url)
 
 @app.route("/driver_close", methods=["POST","GET"])
-def driver_close(unique_url,status):
+def driver_close():
     unique_url = request.form.get('unique_url')
     status = request.form.get('status')
 
@@ -235,18 +235,13 @@ def driver_close(unique_url,status):
            cursor.callproc('driver_close_job',[data_url[0].get('idDriver'),data_url[0].get('idJob'),status])
            isClosed = cursor.fetchall()
            cursor.close()
-           if len(isClosed) is 0:
-               mysql.connection.rollback()
-               return render_template('message.html',
-                              title='Whoops',
-                              message='Something went wrong, please try again.')
-           elif isClosed[0].get('status') == 'error':
+           if len(isClosed) != 0: #NO REPLY IS GOOD HERE, if you get a reply, something went wrong
                mysql.connection.rollback()
                return render_template('message.html',
                               title='Whoops',
                               message='Something went wrong, please try again. '+ isClosed[0].get('message'))
            mysql.connection.commit()
-           #cancled closed successfully
+           #closed successfully
            if status == 'canceled': #if canceled resend text to all drivers who had gotten the url
                cursor = mysql.connection.cursor()
                cursor.callproc('get_assoc_drivers',[data_url[0].get('idBusiness')])
@@ -270,7 +265,7 @@ def driver_close(unique_url,status):
                    #assume you have the url
                    mysql.connection.commit()
                    body_link=url_for('claim_page',unique_url=url[0].get('URL'))
-                   body="This job has opened up again, claim link: "+body_link
+                   body="A job has opened up again, claim link: "+body_link
                    if do_sms:
                        send_sms.send(row.get('PhoneNumber'), body)
 

@@ -5,7 +5,7 @@ from flask_mysqldb import MySQL
 app = Flask(__name__)
 
 #SMS Flag
-do_sms = True
+do_sms = False
 
 ### MySQL ###
 mysql = MySQL()
