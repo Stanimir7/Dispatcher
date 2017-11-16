@@ -23,6 +23,7 @@
             <table class="striped highlight-yellow">
               <thead>
                 <tr>
+                    <th>Job ID</th>
                     <th>Title</th>
                     <th>Status</th>
                     <th>Destination</th>
@@ -50,7 +51,7 @@
             
           </div>
           <div class="card-action">
-            <a href="#!" class="waves-effect waves-green btn teal">Refresh</a>
+            <a id="refresh_jobs" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
           </div>
         </div>
       </div>
@@ -140,6 +141,28 @@
         event.preventDefault();
         event.stopImmediatePropagation()
     });
+    
+    
+    $( "#refresh_jobs" ).click(function() {
+        
+        var formData = JSON.stringify(objectifyForm($("#form_create_job").serializeArray()));
+        $.ajax({
+          type: "POST",
+          url: "/dispatcher/ajax/ajax_business_get_jobs",
+          data: formData,
+          dataType: "json",
+          contentType : "application/json",
+          success: function(responseData){
+              alert(JSON.stringify(responseData));
+            },
+          error: function (errormessage) {
+                //do something else
+            }
+        });
+    });
+    ajax_business_get_jobs
+    
+    
     </script>
 
 {% endblock %}
