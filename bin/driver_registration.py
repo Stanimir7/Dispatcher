@@ -179,6 +179,7 @@ def register_driver_w_business(unique_url):
 
         #get business from unique_url
         cursor = mysql.connection.cursor()
+        #TODO Not Correct Proc Call
         cursor.callproc('get_business', unique_url)
         data = cursor.fetchall()
         cursor.close()

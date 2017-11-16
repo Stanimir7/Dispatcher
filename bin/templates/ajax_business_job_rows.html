@@ -1,6 +1,8 @@
 {% for list_item in jobs %}
+<tr style='cursor: pointer' onclick='showJobDetail({{ list_item['idJob'] }})'>
    <td>{{list_item['idJob']}}</td>
    <td>{{list_item['JobTitle']}}</td>
    <td>{{list_item['JobStatus']}}</td>
    <td>{{list_item['ToLoc']}}</td>
+</tr>
 {% endfor %}

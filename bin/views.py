@@ -7,7 +7,13 @@ from bin import app, mysql, do_sms
 def business_home():
     
     return render_template('business_jobs.html',
-                           title='Home')
+                           title='Home',
+                           idBusiness='1' #TODO dynamically put correct ID here
+                           )
+
+
+
+
 
 @app.route("/business_new", methods=['GET'])
 def business_new():
