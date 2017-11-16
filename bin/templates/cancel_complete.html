@@ -13,13 +13,16 @@
 		{% if bus_phone %}
 		<p><b>for more info, call: {{ bus_phone }}</b></p>
 		{% endif %}
-		<form id='cancel_form' action='/dispatcher/cancel_job' method='post' accept-charset='UTF-8' class="w3-container">
+		<form id='cancel_form' action='/dispatcher/driver_close' method='post' accept-charset='UTF-8' class="w3-container">
 			<input type='hidden' name='unique_url' id='unique_url' value="{{unique_url}}"/>
-			<span class="w3-container"><input type='submit' name='Cancel' value='cancel' class="w3-btn w3-blue"/></span>
+			<input type='hidden' name='status' id='status' value='canceled'/>
+			<span class="w3-container"><input type='submit' name='Cancel' value='Cancel' class="w3-btn w3-blue"/></span>
 		</form>
-		<form id='complete_form' action='/dispatcher/complete_job' method='post' accept-charset='UTF-8' class="w3-container">
+		<form id='complete_form' action='/dispatcher/driver_close' method='post' accept-charset='UTF-8' class="w3-container">
 			<input type='hidden' name='unique_url' id='unique_url' value="{{unique_url}}"/>
-			<span class="w3-container"><input type='submit' name='Complete' value='complete', class="w3-btn w3-blue"/></span>
+			<input type='hidden' name='status' id='status' value='complete'/>
+
+			<span class="w3-container"><input type='submit' name='Complete' value='Complete', class="w3-btn w3-blue"/></span>
 		</form>
 		<br>
 	</div>
