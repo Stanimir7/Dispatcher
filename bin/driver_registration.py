@@ -155,7 +155,8 @@ def perform_deregister_driver():
     #return str(request.form)
     return 'end' #should never get here
 
-    
+
+#Register Driver with a business    
 @app.route("/register_driver/<unique_url>", methods=['GET','POST'])
 def register_driver_w_business(unique_url):
     try:

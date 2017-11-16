@@ -1,0 +1,130 @@
+{% extends "base_business.html" %}
+
+{% block nav_extension %}
+    <!--Tabs-->
+    <div class="nav-content">
+      <ul class="tabs tabs-transparent teal">
+        <li class="tab"><a class="active" href="#jobs">Jobs</a></li>
+        <li class="tab"><a href="#drivers">Drivers</a></li>
+        <!--<li class="tab"><a href="#test4">Test 3</a></li>-->
+      </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <!-- Job Tab -->
+    <div id="jobs" class="col s12">
+      <table class="striped highlight-yellow">
+        <thead>
+          <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Destination</th>
+          </tr>
+        </thead>
+      
+        <tbody>
+          <tr>
+            <td>Best Job Title</td>
+            <td>pending</td>
+            <td>123 Grape Street</td>
+          </tr>
+          <tr>
+            <td>Another Title</td>
+            <td>claimed</td>
+            <td>456 Apple Lane</td>
+          </tr>
+          <tr>
+            <td>My Title</td>
+            <td>claimed</td>
+            <td>789 OhNo Blvd</td>
+          </tr>
+        </tbody>
+      </table>
+            
+        
+        
+        <!-- Create Job Button -->
+          <div class="fixed-action-btn">
+            <a class="btn-floating btn-large waves-effect waves-light yellow darken-3 modal-trigger" href="#create_job_modal">
+              <i class="large material-icons">add</i>
+            </a>
+          </div>
+          
+          
+          <!-- Create Job Dialog -->
+          <div id="create_job_modal" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <button class="modal-action modal-close waves-effect waves-red btn-flat" style="position:absolute;top:0;right:0;"><i class="material-icons">close</i></button>
+                <form id="form_create_job" class="col s12">
+                  <div class="row">
+                    
+                    <div class="input-field col s2">
+                      <input placeholder="TEMPORARY FIELD" name="merch_id" type="text" class="validate">
+                      <label for="merch_id">Merchant ID</label>
+                    </div>
+                    <div class="input-field col s10">
+                      <input name="job_title" type="text" class="validate">
+                      <label for="job_title">Job title</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea name="job_desc" class="materialize-textarea"></textarea>
+                      <label for="job_desc">Description</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <input name="from_loc" type="text" class="validate">
+                      <label for="from_loc">From Location</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <input name="to_loc" type="text" class="validate">
+                      <label for="to_loc">To Location</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <input name="bus_phone" type="tel" class="validate">
+                      <label for="bus_phone">Phone Number</label>
+                    </div>
+                    
+                  </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button href="#!" class="modal-action modal-close waves-effect waves-green btn " type="submit" form="form_create_job">Submit</button>
+              
+            </div>
+          </div>
+    </div>
+    
+    <!-- Driver Tab -->
+    <div id="drivers" class="col s12">
+        Drivers here
+        
+    </div>
+
+{% endblock %}
+
+
+{% block script_extension %}
+    <script type="text/javascript">
+    $( "#form_create_job" ).submit(function( event ) {
+        
+        var formData = JSON.stringify(objectifyForm($("#form_create_job").serializeArray()));
+        $.ajax({
+          type: "POST",
+          url: "/dispatcher/create_job",
+          data: formData,
+          dataType: "json",
+          contentType : "application/json",
+          success: function(responseData){
+              alert(JSON.stringify(responseData));
+            },
+          error: function (errormessage) {
+                //do something else
+            }
+        });
+        
+        event.preventDefault();
+        event.stopImmediatePropagation()
+    });
+    </script>
+
+{% endblock %}
