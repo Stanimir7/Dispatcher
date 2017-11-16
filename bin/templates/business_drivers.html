@@ -4,16 +4,17 @@
     <!--Tabs-->
     <div class="nav-content">
       <ul class="tabs tabs-transparent teal">
-        <li class="tab"><a class="active" href="#active_drivers">Active Drivers</a></li>
-        <li class="tab"><a href="#closed_drivers">Closed Drivers</a></li>
+        <li class="tab"><a class="active" href="#pending_drivers">Pending Drivers</a></li>
+        <li class="tab"><a href="#hired_drivers">Hired Drivers</a></li>
+        <li class="tab"><a href="#blocked_drivers">Blocked Drivers</a></li>
         <!--<li class="tab"><a href="#test4">Test 3</a></li>-->
       </ul>
     </div>
 {% endblock %}
 
 {% block content %}
-    <!-- Active Driver Tab -->
-    <div id="active_drivers" class="col s12">
+    <!-- Pending Driver Tab -->
+    <div id="pending_drivers" class="col s12">
       
       <div class="row">
       <div class="col s12">
@@ -24,20 +25,21 @@
               <thead>
                 <tr>
                     <th>Driver ID</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Destination</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Hire Status</th>
                 </tr>
               </thead>
             
-              <tbody id="active_drivers_table_body">
-                <tr><td>No Active Drivers</td></tr>
+              <tbody id="pending_drivers_table_body">
+                <tr><td>No Pending Drivers</td></tr>
               </tbody>
             </table>
             
           </div>
           <div class="card-action">
-            <a id="refresh_active_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
+            <a id="refresh_pending_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
           </div>
         </div>
       </div>
@@ -45,8 +47,10 @@
       
     </div>
     
-    <!-- Closed Drivers Tab -->
-    <div id="closed_drivers" class="col s12">
+    
+    <!-- hired Driver Tab -->
+    <div id="hired_drivers" class="col s12">
+      
       <div class="row">
       <div class="col s12">
         <div class="card " style="margin-top: 10px">
@@ -56,85 +60,65 @@
               <thead>
                 <tr>
                     <th>Driver ID</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Destination</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Hire Status</th>
                 </tr>
               </thead>
             
-              <tbody id="closed_drivers_table_body">
-                <tr><td>No Closed Drivers</td></tr>
+              <tbody id="hired_drivers_table_body">
+                <tr><td>No hired Drivers</td></tr>
               </tbody>
             </table>
             
           </div>
           <div class="card-action">
-            <a id="refresh_closed_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
+            <a id="refresh_hired_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
           </div>
         </div>
       </div>
       </div>
-        
+      
     </div>
     
     
-    <!-- Create Driver Button -->
-    <!--
-    <div class="fixed-action-btn">
-      <a id="create_driver_open_button" class="btn-floating btn-large waves-effect waves-light yellow darken-3 modal-trigger" href="#create_driver_modal">
-        <i class="large material-icons">add</i>
-      </a>
-    </div>
-    -->
-    
-    <!-- Create Driver Dialog -->
-    <!--
-    <div id="create_driver_modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-          <h5>Create Driver</h5>
-          <button class="modal-action modal-close waves-effect waves-red btn-flat" style="position:absolute;top:0;right:0;"><i class="material-icons">close</i></button>
-          <form id="form_create_driver" class="col s12">
-            <div class="row">
+    <!-- blocked Driver Tab -->
+    <div id="blocked_drivers" class="col s12">
+      
+      <div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div class="card-content" style="padding:0">
             
-               <input name="id_bus" type="hidden" value="{{ idBusiness }}" />
-              <div class="input-field col s10">
-                <input name="driver_title" type="text" class="validate">
-                <label for="driver_title">Driver title</label>
-              </div>
-              <div class="input-field col s12">
-                <textarea name="driver_desc" class="materialize-textarea"></textarea>
-                <label for="driver_desc">Description</label>
-              </div>
-              <div class="input-field col s6">
-                <input name="from_loc" type="text" class="validate">
-                <label for="from_loc">From Location</label>
-              </div>
-              <div class="input-field col s6">
-                <input name="to_loc" type="text" class="validate">
-                <label for="to_loc">To Location</label>
-              </div>
-              <div class="input-field col s6">
-                <input name="bus_phone" type="tel" class="validate">
-                <label for="bus_phone">Phone Number</label>
-              </div>
-              
-            </div>
-          </form>
-          
-            <div id="create_driver_progress" style="display: none" class="progress">
-                <div class="indeterminate"></div>
-            </div>
-          
-          
+            <table class="striped highlight-tr">
+              <thead>
+                <tr>
+                    <th>Driver ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Hire Status</th>
+                </tr>
+              </thead>
+            
+              <tbody id="blocked_drivers_table_body">
+                <tr><td>No blocked Drivers</td></tr>
+              </tbody>
+            </table>
+            
+          </div>
+          <div class="card-action">
+            <a id="refresh_blocked_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
+          </div>
+        </div>
       </div>
-      <div class="modal-footer">
-        
-        <button id="create_driver_submit_button" href="#!" class="waves-effect waves-green btn " type="submit" form="form_create_driver">Submit</button>
-        
       </div>
+      
     </div>
-    -->
     
+    
+
     <!-- Driver Detail Dialog -->
     <div id="driver_detail_modal" class="modal modal-fixed-footer">
       <div class="modal-content">
@@ -147,8 +131,8 @@
           
       </div>
       <div class="modal-footer">
-        <button href="#!" onclick="closeDriver('complete')" class=" green modal-action modal-close waves-effect waves-light btn ">Complete Driver</button>
-        <button href="#!" onclick="closeDriver('canceled')" class="red  modal-action modal-close waves-effect waves-light btn ">Cancel Driver</button>
+        <button href="#!" onclick="modDriver('hired')" class=" green modal-action modal-close waves-effect waves-light btn ">Hire Driver</button>
+        <button href="#!" onclick="modDriver('blocked')" class="red  modal-action modal-close waves-effect waves-light btn ">Block Driver</button>
 
         <button href="#!" class=" blue modal-action modal-close waves-effect waves-light btn ">Close</button>
         
@@ -186,14 +170,12 @@
      * On Ready Trigger
      *******************/
       $(function() {
-        refreshDriverTable('pending,claimed',"active_drivers_table_body");
-        refreshDriverTable('complete,canceled',"closed_drivers_table_body");
+        refreshAll();
         startAutoRefresh();
       });
         function startAutoRefresh(){
           setTimeout(startAutoRefresh,5000);
-          refreshDriverTable('pending,claimed',"active_drivers_table_body");
-          refreshDriverTable('complete,canceled',"closed_drivers_table_body");
+          refreshAll();
         }
       
       
@@ -201,68 +183,31 @@
      * Triggers
      *******************/
         /*******************
-         * Create Driver Submission
+         * Pending Driver Table Forced Refresh Button
          *******************/
-        $( "#form_create_driver" ).submit(function( event ) {
+        $( "#refresh_pending_drivers" ).click(function() {
             
-            var formData = JSON.stringify(objectifyForm($("#form_create_driver").serializeArray()));
-            $.ajax({
-              type: "POST",
-              url: "/dispatcher/create_driver",
-              data: formData,
-              dataType: "json",
-              contentType : "application/json",
-              success: function(responseData){
-                  //alert(JSON.stringify(responseData));
-                  if (responseData.status == "success")
-                  {
-                    $("#create_driver_progress").hide();
-                    $("#create_driver_modal").modal('close');
-                  }
-                },
-              error: function (errormessage) {
-                    //do something else
-                }
-            });
-            
-            event.preventDefault();
-            event.stopImmediatePropagation()
-            
-            $("#create_driver_progress").show();
-            $("#form_create_driver" ).hide();
-            $("#create_driver_submit_button").hide();
-            
-        });
-        
-        
-         /*******************
-         * Create Driver Dialog Open
-         *******************/
-        $( "#create_driver_open_button" ).click(function(  ) {
-            
-            $("#create_driver_progress").hide();
-            $("#form_create_driver" ).show();
-            $("#create_driver_submit_button").show();
-            
-        });
-        
-        
-        
-        /*******************
-         * Active Driver Table Forced Refresh Button
-         *******************/
-        $( "#refresh_active_drivers" ).click(function() {
-            
-            refreshDriverTable('pending,claimed',"active_drivers_table_body");
+            refreshDriverTable('pending',"pending_drivers_table_body");
                 
         });
         
+        
         /*******************
-         * Closed Driver Table Forced Refresh Button
+         * Hire Driver Table Forced Refresh Button
          *******************/
-        $( "#refresh_closed_drivers" ).click(function() {
+        $( "#refresh_hired_drivers" ).click(function() {
             
-            refreshDriverTable('complete,canceled',"closed_drivers_table_body");
+            refreshDriverTable('hired',"hired_drivers_table_body");
+                
+        });
+        
+        
+        /*******************
+         * blocked Driver Table Forced Refresh Button
+         *******************/
+        $( "#refresh_blocked_drivers" ).click(function() {
+            
+            refreshDriverTable('blocked',"blocked_drivers_table_body");
                 
         });
         
@@ -278,7 +223,7 @@
         *******************/
         function refreshDriverTable(statusList,tableBodyID) {
           var jsonData = JSON.stringify({
-                bus_id: {{ idBusiness }},
+                id_bus: {{ idBusiness }},
                 types: statusList
             });
             
@@ -303,7 +248,9 @@
         * Show Driver Detail Modal Function
         *******************/
         function showDriverDetail(idDriver){
+          
           var jsonData = JSON.stringify({
+                id_bus: {{ idBusiness }},
                 id_driver: idDriver
             });
             
@@ -329,17 +276,18 @@
         }
         
         /*******************
-        * Business Close Driver
+        * Business Mod Driver
         *******************/
-        function closeDriver(the_action){
+        function modDriver(the_new_status){
           var jsonData = JSON.stringify({
-                driver_id: $("#driver_detail_current_id ").html(),
-                action: the_action
+                id_bus: {{ idBusiness }},
+                id_driver: $("#driver_detail_current_id ").html(),
+                new_status: the_new_status
             });
             
             $.ajax({
               type: "POST",
-              url: "/dispatcher/business_close_driver",
+              url: "/dispatcher/business_mod_driver",
               data: jsonData,
               dataType: "json",
               contentType : "application/json",
@@ -347,8 +295,7 @@
                 
                   //TODO close progress indicator, show content
                   //alert(JSON.stringify(responseData));
-                  refreshDriverTable('complete,canceled',"closed_drivers_table_body");
-                  refreshDriverTable('pending,claimed',"active_drivers_table_body");
+                  refreshAll();
                   
                 },
               error: function (errormessage) {
@@ -359,6 +306,18 @@
             //TODO show progress indicator, hide content
           
         }
+        
+        
+        /*******************
+        * Refresh All Function
+        *   Laziness
+        *******************/
+        function refreshAll(){
+          refreshDriverTable('pending',"pending_drivers_table_body");
+          refreshDriverTable('hired',"hired_drivers_table_body");
+          refreshDriverTable('blocked',"blocked_drivers_table_body");
+        }
+        
         
         
     

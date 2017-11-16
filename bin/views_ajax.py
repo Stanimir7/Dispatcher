@@ -2,6 +2,11 @@ import json, urllib, random, string
 from flask import request, jsonify, render_template
 from bin import app, mysql, do_sms
 
+#TODO probably pull business ID from some global var set after login
+
+#######################
+######## Jobs #########
+#######################
 @app.route("/ajax/ajax_business_get_jobs", methods=['POST'])
 def ajax_business_get_jobs():
     bus_id = request.get_json().get('bus_id','')
@@ -19,7 +24,7 @@ def ajax_business_get_jobs():
             jobs.extend(data)
     
     if len(jobs) is 0:
-        return jsonify("<tr><td>No Closed Jobs</td></tr>")
+        return jsonify("<tr><td>No Jobs</td></tr>")
     
     return jsonify(render_template('ajax_business_job_rows.html',
                            jobs=jobs))
@@ -40,4 +45,48 @@ def ajax_job_detail_table():
                     'table_html':
                     render_template('ajax_job_detail_table.html',
                            single_job_detail=job)
+                    })
+
+#######################
+###### Drivers ########
+#######################
+@app.route("/ajax/ajax_business_get_drivers", methods=['POST'])
+def ajax_business_get_drivers():
+    id_bus = request.get_json().get('id_bus','')
+    types = request.get_json().get('types','').split(",")
+    
+    drivers = []
+    
+    for status in types:
+        cursor = mysql.connection.cursor()
+        cursor.callproc('get_assoc_drivers_with_status',[id_bus, status])
+        data = cursor.fetchall()
+        cursor.close()
+        
+        if len(data) is not 0:
+            drivers.extend(data)
+    
+    if len(drivers) is 0:
+        return jsonify("<tr><td>No Drivers</td></tr>")
+    
+    return jsonify(render_template('ajax_business_driver_rows.html',
+                           drivers=drivers))
+
+@app.route("/ajax/ajax_driver_detail_table", methods=['POST'])
+def ajax_driver_detail_table():
+    id_bus = request.get_json().get('id_bus','')
+    id_driver = request.get_json().get('id_driver','')
+
+    cursor = mysql.connection.cursor()
+    cursor.callproc('get_business_driver',[id_bus,id_driver])
+    data = cursor.fetchall()
+    cursor.close()
+        
+    if len(data) is not 0:
+        driver = data[0]
+    
+    return jsonify({'id_driver':id_driver,
+                    'table_html':
+                    render_template('ajax_driver_detail_table.html',
+                           single_driver_detail=driver)
                     })

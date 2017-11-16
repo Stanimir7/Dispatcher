@@ -165,7 +165,7 @@ def register_driver_w_business(unique_url):
 
         #get driver from phone number
         cursor = mysql.connection.cursor()
-        cursor.callproc('get_driver', _phoneNumber)
+        cursor.callproc('get_driver_from_phone', _phoneNumber)
         data = cursor.fetchall()
         cursor.close()
 
