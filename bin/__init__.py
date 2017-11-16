@@ -26,6 +26,5 @@ if __name__ == "__main__":
     
     
 ### Modules ###
-from bin import create_job, register_business, driver_management, util, views
-
+from bin import views, create_job, register_business, driver_management, util, cancel_job, complete_job
 
