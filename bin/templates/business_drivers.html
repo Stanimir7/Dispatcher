@@ -1,0 +1,367 @@
+{% extends "base_business.html" %}
+
+{% block nav_extension %}
+    <!--Tabs-->
+    <div class="nav-content">
+      <ul class="tabs tabs-transparent teal">
+        <li class="tab"><a class="active" href="#active_drivers">Active Drivers</a></li>
+        <li class="tab"><a href="#closed_drivers">Closed Drivers</a></li>
+        <!--<li class="tab"><a href="#test4">Test 3</a></li>-->
+      </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <!-- Active Driver Tab -->
+    <div id="active_drivers" class="col s12">
+      
+      <div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div class="card-content" style="padding:0">
+            
+            <table class="striped highlight-tr">
+              <thead>
+                <tr>
+                    <th>Driver ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Destination</th>
+                </tr>
+              </thead>
+            
+              <tbody id="active_drivers_table_body">
+                <tr><td>No Active Drivers</td></tr>
+              </tbody>
+            </table>
+            
+          </div>
+          <div class="card-action">
+            <a id="refresh_active_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
+          </div>
+        </div>
+      </div>
+      </div>
+      
+    </div>
+    
+    <!-- Closed Drivers Tab -->
+    <div id="closed_drivers" class="col s12">
+      <div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div class="card-content" style="padding:0">
+            
+            <table class="striped highlight-tr">
+              <thead>
+                <tr>
+                    <th>Driver ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Destination</th>
+                </tr>
+              </thead>
+            
+              <tbody id="closed_drivers_table_body">
+                <tr><td>No Closed Drivers</td></tr>
+              </tbody>
+            </table>
+            
+          </div>
+          <div class="card-action">
+            <a id="refresh_closed_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
+          </div>
+        </div>
+      </div>
+      </div>
+        
+    </div>
+    
+    
+    <!-- Create Driver Button -->
+    <!--
+    <div class="fixed-action-btn">
+      <a id="create_driver_open_button" class="btn-floating btn-large waves-effect waves-light yellow darken-3 modal-trigger" href="#create_driver_modal">
+        <i class="large material-icons">add</i>
+      </a>
+    </div>
+    -->
+    
+    <!-- Create Driver Dialog -->
+    <!--
+    <div id="create_driver_modal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+          <h5>Create Driver</h5>
+          <button class="modal-action modal-close waves-effect waves-red btn-flat" style="position:absolute;top:0;right:0;"><i class="material-icons">close</i></button>
+          <form id="form_create_driver" class="col s12">
+            <div class="row">
+            
+               <input name="id_bus" type="hidden" value="{{ idBusiness }}" />
+              <div class="input-field col s10">
+                <input name="driver_title" type="text" class="validate">
+                <label for="driver_title">Driver title</label>
+              </div>
+              <div class="input-field col s12">
+                <textarea name="driver_desc" class="materialize-textarea"></textarea>
+                <label for="driver_desc">Description</label>
+              </div>
+              <div class="input-field col s6">
+                <input name="from_loc" type="text" class="validate">
+                <label for="from_loc">From Location</label>
+              </div>
+              <div class="input-field col s6">
+                <input name="to_loc" type="text" class="validate">
+                <label for="to_loc">To Location</label>
+              </div>
+              <div class="input-field col s6">
+                <input name="bus_phone" type="tel" class="validate">
+                <label for="bus_phone">Phone Number</label>
+              </div>
+              
+            </div>
+          </form>
+          
+            <div id="create_driver_progress" style="display: none" class="progress">
+                <div class="indeterminate"></div>
+            </div>
+          
+          
+      </div>
+      <div class="modal-footer">
+        
+        <button id="create_driver_submit_button" href="#!" class="waves-effect waves-green btn " type="submit" form="form_create_driver">Submit</button>
+        
+      </div>
+    </div>
+    -->
+    
+    <!-- Driver Detail Dialog -->
+    <div id="driver_detail_modal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+          <button class="modal-action modal-close waves-effect waves-red btn-flat" style="position:absolute;top:0;right:0;"><i class="material-icons">close</i></button>
+          <div id="driver_detail_current_id" style="display: none"></div>
+          <div id="driver_detail_table">
+            <!--Will be replaced with driver detail via ajax-->
+          </div>
+          
+          
+      </div>
+      <div class="modal-footer">
+        <button href="#!" onclick="closeDriver('complete')" class=" green modal-action modal-close waves-effect waves-light btn ">Complete Driver</button>
+        <button href="#!" onclick="closeDriver('canceled')" class="red  modal-action modal-close waves-effect waves-light btn ">Cancel Driver</button>
+
+        <button href="#!" class=" blue modal-action modal-close waves-effect waves-light btn ">Close</button>
+        
+      </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    <!-- Generic Message Dialog -->
+    <div id="message_modal" class="modal">
+      <div class="modal-content">
+          <div id="message_modal_body">
+            
+            
+          </div>
+          
+          
+      </div>
+      <!--<div class="modal-footer">
+        <button href="#!" class="modal-action modal-close waves-effect waves-green btn ">Close</button>
+        
+      </div>-->
+    </div>
+    
+
+{% endblock %}
+
+
+{% block script_extension %}
+    <script type="text/javascript">
+    /*******************
+     * On Ready Trigger
+     *******************/
+      $(function() {
+        refreshDriverTable('pending,claimed',"active_drivers_table_body");
+        refreshDriverTable('complete,canceled',"closed_drivers_table_body");
+        startAutoRefresh();
+      });
+        function startAutoRefresh(){
+          setTimeout(startAutoRefresh,5000);
+          refreshDriverTable('pending,claimed',"active_drivers_table_body");
+          refreshDriverTable('complete,canceled',"closed_drivers_table_body");
+        }
+      
+      
+    /*******************
+     * Triggers
+     *******************/
+        /*******************
+         * Create Driver Submission
+         *******************/
+        $( "#form_create_driver" ).submit(function( event ) {
+            
+            var formData = JSON.stringify(objectifyForm($("#form_create_driver").serializeArray()));
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/create_driver",
+              data: formData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+                  //alert(JSON.stringify(responseData));
+                  if (responseData.status == "success")
+                  {
+                    $("#create_driver_progress").hide();
+                    $("#create_driver_modal").modal('close');
+                  }
+                },
+              error: function (errormessage) {
+                    //do something else
+                }
+            });
+            
+            event.preventDefault();
+            event.stopImmediatePropagation()
+            
+            $("#create_driver_progress").show();
+            $("#form_create_driver" ).hide();
+            $("#create_driver_submit_button").hide();
+            
+        });
+        
+        
+         /*******************
+         * Create Driver Dialog Open
+         *******************/
+        $( "#create_driver_open_button" ).click(function(  ) {
+            
+            $("#create_driver_progress").hide();
+            $("#form_create_driver" ).show();
+            $("#create_driver_submit_button").show();
+            
+        });
+        
+        
+        
+        /*******************
+         * Active Driver Table Forced Refresh Button
+         *******************/
+        $( "#refresh_active_drivers" ).click(function() {
+            
+            refreshDriverTable('pending,claimed',"active_drivers_table_body");
+                
+        });
+        
+        /*******************
+         * Closed Driver Table Forced Refresh Button
+         *******************/
+        $( "#refresh_closed_drivers" ).click(function() {
+            
+            refreshDriverTable('complete,canceled',"closed_drivers_table_body");
+                
+        });
+        
+    /*******************
+     * Functions
+     *******************/
+    
+        /*******************
+        * Refresh Driver Table
+        *
+        *   statusList: must be a comma delimited list of valid status types to return
+        *      Order is meaingful, the drivers will be returned in the order specified
+        *******************/
+        function refreshDriverTable(statusList,tableBodyID) {
+          var jsonData = JSON.stringify({
+                bus_id: {{ idBusiness }},
+                types: statusList
+            });
+            
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/ajax/ajax_business_get_drivers",
+              data: jsonData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+                  $("#" + tableBodyID).html(JSON.stringify(responseData));
+                },
+              error: function (errormessage) {
+                    //do something else
+                }
+            });
+            
+          
+        }
+        
+        /*******************
+        * Show Driver Detail Modal Function
+        *******************/
+        function showDriverDetail(idDriver){
+          var jsonData = JSON.stringify({
+                id_driver: idDriver
+            });
+            
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/ajax/ajax_driver_detail_table",
+              data: jsonData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+                
+                
+                  $("#driver_detail_current_id ").html(JSON.stringify(responseData.id_driver));
+                  $("#driver_detail_table").html(JSON.stringify(responseData.table_html));
+                  $('#driver_detail_modal').modal('open');
+                  
+                },
+              error: function (errormessage) {
+                    //do something else
+                }
+            });
+          
+        }
+        
+        /*******************
+        * Business Close Driver
+        *******************/
+        function closeDriver(the_action){
+          var jsonData = JSON.stringify({
+                driver_id: $("#driver_detail_current_id ").html(),
+                action: the_action
+            });
+            
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/business_close_driver",
+              data: jsonData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+                
+                  //TODO close progress indicator, show content
+                  //alert(JSON.stringify(responseData));
+                  refreshDriverTable('complete,canceled',"closed_drivers_table_body");
+                  refreshDriverTable('pending,claimed',"active_drivers_table_body");
+                  
+                },
+              error: function (errormessage) {
+                    //do something else
+                }
+            });
+            
+            //TODO show progress indicator, hide content
+          
+        }
+        
+        
+    
+    </script>
+
+{% endblock %}
