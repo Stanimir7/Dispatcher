@@ -12,7 +12,7 @@ def register_driver():
         
         #Connect to DB, call stored proc, close is handled automatically?
         cursor = mysql.connection.cursor()
-        cursor.callproc('new_driver',(_firstName, _lastName, _phoneNumber))
+        cursor.callproc('new_driver',[_firstName, _lastName, _phoneNumber])
         data = cursor.fetchall()
         cursor.close()
         #we are not expecting any data in response except in error
@@ -79,7 +79,7 @@ def format_deregister_driver():
                             }
                         )
                         
-            return render_template("deregister.html",
+            return render_template("driver_view_deregister.html",
                            title='Deregister',
                            user=user,
                            lines=lines)

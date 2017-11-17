@@ -3,7 +3,9 @@ from flask import request, jsonify, render_template
 from bin import app, mysql
 
 
-
+############################
+######## Driver Claim Job Page ########
+############################
 @app.route("/claim_page/<unique_url>",methods=["POST","GET"])
 def claim_page(unique_url):
     #TODO: have this page be a manage job thing too, not just claim button
@@ -26,8 +28,7 @@ def claim_page(unique_url):
         #Assume success if not error at this point
         mysql.connection.commit()
 
-        if data_url[0].get('JobStatus') != 'pending':	    
-	
+        if data_url[0].get('JobStatus') != 'pending':
             cursor = mysql.connection.cursor()
             cursor.callproc('get_assoc_job_driver',[data_url[0].get('idJob')])
             driver = cursor.fetchall()
@@ -36,13 +37,13 @@ def claim_page(unique_url):
 
             if data_url[0].get('idDriver') == driver[0].get('idDriver'):
                 #this is the driver that has claimed the job, allow them to cancel or complete job
-                return render_template('cancel_complete.html',unique_url = unique_url)
+                return render_template('driver_close_job.html',unique_url = unique_url)
             else:
                 return render_template('message.html',
                            title='Job Taken',
                            message='Sorry, this job has been claimed. ')
         elif data_url[0].get('JobStatus') == 'pending':    
-            return render_template('claim.html',
+            return render_template('driver_job_claim.html',
                            title='Claim Job',
                            bus_name=data_url[0].get('BusName'),
                            job_title=data_url[0].get('JobTitle'),
@@ -57,6 +58,10 @@ def claim_page(unique_url):
         return jsonify({'status':str(e)})
     return 'end' #should never get here
     
+############################
+######## Claim Job Action ########
+############################
+	
 @app.route("/claim_job",methods=["POST","GET"])
 def claim_job():
     if request.form.get('claim') is not None:
@@ -109,7 +114,7 @@ def claim_job():
     #Assume success if not error at this point
     mysql.connection.commit()
     if response[0].get('status') == 'success':
-        return render_template('cancel_complete.html',unique_url = unique_url)
+        return render_template('driver_close_job.html',unique_url = unique_url)
 
     if response[0].get('status') == 'info':
         if response[0].get('message') == 'job_claimed':
@@ -208,7 +213,7 @@ def driver_close():
                    if do_sms:
                        send_sms.send(row.get('PhoneNumber'), body)
 
-               return render_template('claim.html', #if canceled in error, allow them to claim again and return them to the claim page
+               return render_template('driver_job_claim.html', #if canceled in error, allow them to claim again and return them to the claim page
                               title='Claim Job',
                               bus_name=data_url[0].get('BusName'),
                               job_title=data_url[0].get('JobTitle'),
@@ -245,7 +250,7 @@ def driver_close():
 #    
 #    cursor = mysql.connection.cursor()
 #    
-#    #CALL `dispatcher`.`driver_close_job`(<{IN p_idDriver INT}>, <{IN p_idJob INT}>, <{IN p_status ENUM('complete', 'canceled')}>);	
+#    #CALL `dispatcher`.`driver_close_job`(<{IN p_idDriver INT}>, <{IN p_idJob INT}>, <{IN p_status ENUM('complete', 'canceled')}>);    
 #    cursor.callproc('driver_close_job', [driver_id, job_id, 'canceled'])
 #    
 #    data = cursor.fetchall()
@@ -272,7 +277,7 @@ def driver_close():
 #    
 #    cursor = mysql.connection.cursor()
 #    
-#    #CALL `dispatcher`.`driver_close_job`(<{IN p_idDriver INT}>, <{IN p_idJob INT}>, <{IN p_status ENUM('complete', 'canceled')}>);	
+#    #CALL `dispatcher`.`driver_close_job`(<{IN p_idDriver INT}>, <{IN p_idJob INT}>, <{IN p_status ENUM('complete', 'canceled')}>);    
 #    cursor.callproc('driver_close_job', [driver_id, job_id, 'complete'])
 #    
 #    data = cursor.fetchall()

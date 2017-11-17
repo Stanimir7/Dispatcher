@@ -1,0 +1,87 @@
+{% extends "base_driver.html" %}
+
+{% block content %}
+	
+	<div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div id="signup_card_content" class="card-content">
+            <h5>Driver Sign-up</h5>
+            
+			<div class="row">
+			<form id="signup" class="col s12">
+            <div class="row">
+              <div class="input-field col s10">
+                <input name="first_name" type="text" class="validate">
+                <label for="first_name">First Name</label>
+              </div>
+              <div class="input-field col s12">
+                <input name="last_name" type="text" class="validate">
+                <label for="last_name">Last Name</label>
+              </div>
+              <div class="input-field col s12">
+                <input name="phone_number" type="tel"  class="validate">
+                <label for="phone_number">Phone Number</label>
+              </div>
+			</div>
+              </form>
+            </div>
+          
+
+          
+		</div>
+		<div id="signup_submit_button" class="card-action">
+		  <!--<button href="#!" class="modal-action modal-close waves-effect waves-green btn " type="submit" form="form_create_job">Submit</button>-->
+		  <button  href="#!" class="waves-effect waves-green btn " type="submit" form="signup">Submit</button>
+		  
+		</div>
+
+        </div>
+      </div>
+    </div>
+
+
+{% endblock %}
+
+
+
+{% block script_extension %}
+    <script type="text/javascript">
+    /*******************
+     * Triggers
+     *******************/
+        /*******************
+         * Signup Submission
+         *******************/
+        $( "#signup" ).submit(function( event ) {
+            
+            var formData = JSON.stringify(objectifyForm($("#signup").serializeArray()));
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/register_driver",
+              data: formData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+                  //alert(JSON.stringify(responseData));
+                  if (responseData.status == "success")
+                  {
+                    $("#signup_card_content").html("<h5>Successful Registration. Welcome to Dispatcher!</h5>");
+                  } else if (responseData.status == "error")
+                  {
+                    $("#signup_card_content").html("<h5>" + responseData.message +"</h5>");
+                  }
+				  
+				  $("#signup_submit_button").hide();
+                }
+            });
+            
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            
+        });
+        
+        
+    </script>
+
+{% endblock %}
