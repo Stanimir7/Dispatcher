@@ -29,7 +29,25 @@ def business_new():
     return render_template('business_new.html',
                            title='Merchant Registration')
 
+@app.route("/business_url/<unique_url>", methods=['GET','POST'])
+def business_url(unique_url):
+    #get business from unique_url
+    cursor = mysql.connection.cursor()
+    #TODO Not Correct Proc Call
+    cursor.callproc('get_business_from_url', [unique_url])
+    bus_data = cursor.fetchall()
+    cursor.close()
 
+    if len(bus_data) is 0:
+        mysql.connection.rollback()
+        return render_template('message.html',
+                                title='Whoops',
+                                message='Something went wrong, please try again.')
+    
+    return render_template('business_url.html',
+                           title='Apply',
+                           bus_name=bus_data[0].get('BusName'),
+                           unique_url=unique_url)
 
 ############################
 ######## Driver ########
@@ -54,4 +72,11 @@ def driver_deregister():
     
     return render_template('driver_deregister.html',
                            title='Driver Signup'
+                           )
+
+@app.route("/driver_find_business", methods=['GET'])
+def driver_find_business():
+    
+    return render_template('driver_find_business.html',
+                           title='Find Signup URL'
                            )
