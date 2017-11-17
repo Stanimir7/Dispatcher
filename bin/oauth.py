@@ -7,12 +7,13 @@ def oauth_callback():
     expected_client_id = 'AR9BJGD3R4BE2'
     client_secret = 'fdcb7b56-7518-0efa-d3f6-179e5fb94a8f'
 
-    supplied_client_id = request.args.get('client_id', '')
-    supplied_merchant_id = request.args.get('merchant_id', '')
-    auth_code = request.args.get('code', '')
+    supplied_client_id = request.args.get('client_id', default = '')
+    supplied_merchant_id = request.args.get('merchant_id', default = '')
+    auth_code = request.args.get('code', default = '')
     
     if supplied_client_id != expected_client_id:
-        return jsonify({'status': 'error', 'message': "Invalid client id {} supplied" % supplied_client_id})
+        err_msg = 'Invalid client id supplied: {}'.format(supplied_client_id)
+        return jsonify({'status': 'error', 'message': err_msg})
     elif supplied_merchant_id == '':
         return jsonify({'status': 'error', 'message': "Please provide a merchant id."})
     elif auth_code == '':
