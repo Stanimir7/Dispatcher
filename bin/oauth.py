@@ -7,7 +7,7 @@ from bin import app
 def oauth_callback():
     expected_client_id = 'AR9BJGD3R4BE2'
     client_secret = 'fdcb7b56-7518-0efa-d3f6-179e5fb94a8f'
-`
+
     supplied_client_id = request.args.get('client_id', default = '')
     supplied_merchant_id = request.args.get('merchant_id', default = '')
     auth_code = request.args.get('code', default = '')
@@ -33,6 +33,8 @@ def oauth_callback():
 
 @app.route("/test_authed_callback", methods=['POST', 'GET'])
 def test_authed_callback():
+    client_secret = 'fdcb7b56-7518-0efa-d3f6-179e5fb94a8f'
+
     expected_client_id = 'AR9BJGD3R4BE2'
     supplied_client_id = request.args.get('client_id', default = '')
     supplied_merchant_id = request.args.get('merchant_id', default = '')
@@ -42,7 +44,7 @@ def test_authed_callback():
         auth_code == ''):
         redirect_url = 'https://sandbox.dev.clover.com/oauth/authorize?'
         redirect_params = { 'client_id' : expected_client_id,
-            'redirect_uri' : 'ec2-52-23-224-226.compute-1.amazonaws.com/dispatcher/test_authed_callback' }
+            'redirect_uri' : 'http://ec2-52-23-224-226.compute-1.amazonaws.com/dispatcher/test_authed_callback' }
         
         return redirect('{}{}'.format(redirect_url, urllib.parse.urlencode(redirect_params)))
     else:
