@@ -1,9 +1,14 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template, url_for, redirect
 from bin import app, mysql, do_sms
+import bin.oauth
 
 @app.route("/business_mod_driver", methods=['POST'])
 def business_mod_driver():
+	#auth check
+	if bin.oauth.curr_business_id == '': 
+		return jsonify({'status':'error','message':'Not authenticated'})
+	
 	id_bus = request.get_json().get('id_bus','')
 	id_driver = request.get_json().get('id_driver','')
 	new_status = request.get_json().get('new_status','')

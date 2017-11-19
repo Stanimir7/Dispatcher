@@ -1,6 +1,7 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template
-from bin import app, mysql, do_sms
+from bin import app, mysql, do_sms, SUCCESSFUL_AUTH
+import bin.oauth
 
 ############################
 ######## Business ########
@@ -8,19 +9,30 @@ from bin import app, mysql, do_sms
 
 @app.route("/business_jobs", methods=['GET'])
 def business_jobs():
-    
-    return render_template('business_jobs.html',
+    #auth check
+    auth_res = bin.oauth.force_auth("/business_jobs")
+    if auth_res == SUCCESSFUL_AUTH:
+        return render_template('business_jobs.html',
                            title='Jobs',
-                           idBusiness='1' #TODO dynamically put correct ID here
+                           idBusiness = bin.oauth.curr_business_id
                            )
+    else:
+        return auth_res #MUST DO THIS; handles redirects, auth failure, etc
+    
 
 @app.route("/business_drivers", methods=['GET'])
 def business_drivers():
-    
-    return render_template('business_drivers.html',
+    #auth check
+    auth_res = bin.oauth.force_auth("/business_drivers")
+    if auth_res == SUCCESSFUL_AUTH:
+        return render_template('business_drivers.html',
                            title='Drivers',
-                           idBusiness='1' #TODO dynamically put correct ID here
+                           idBusiness= bin.oauth.curr_business_id
                            )
+    else:
+        return auth_res #MUST DO THIS; handles redirects, auth failure, etc
+    
+    
 
 
 @app.route("/business_new", methods=['GET'])
@@ -29,11 +41,16 @@ def business_new():
     return render_template('business_new.html',
                            title='Merchant Registration')
 
+
+############################
+######## Driver ########
+############################
+
+#Driver signup to business
 @app.route("/business_url/<unique_url>", methods=['GET','POST'])
 def business_url(unique_url):
     #get business from unique_url
     cursor = mysql.connection.cursor()
-    #TODO Not Correct Proc Call
     cursor.callproc('get_business_from_url', [unique_url])
     bus_data = cursor.fetchall()
     cursor.close()
@@ -48,10 +65,6 @@ def business_url(unique_url):
                            title='Apply',
                            bus_name=bus_data[0].get('BusName'),
                            unique_url=unique_url)
-
-############################
-######## Driver ########
-############################
 
 @app.route("/driver_home", methods=['GET'])
 def driver_home():

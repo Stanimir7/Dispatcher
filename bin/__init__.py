@@ -8,9 +8,6 @@ client_secret = 'fdcb7b56-7518-0efa-d3f6-179e5fb94a8f'
 #Internal status constants
 SUCCESSFUL_AUTH = 'successful_clover_auth'
 
-#Internal Current Business ID; should be set on first access request by clover
-curr_business_id = ''
-
 #Current hostname. Needed to build clover auth stuff.
 hostname = 'http://ec2-52-23-224-226.compute-1.amazonaws.com'
 

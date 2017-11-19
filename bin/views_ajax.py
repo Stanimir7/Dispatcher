@@ -1,15 +1,19 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template
 from bin import app, mysql, do_sms
-
-#TODO probably pull business ID from some global var set after login
+import bin.oauth
 
 #######################
 ######## Jobs #########
 #######################
 @app.route("/ajax/ajax_business_get_jobs", methods=['POST'])
 def ajax_business_get_jobs():
-    bus_id = request.get_json().get('bus_id','')
+    #auth check
+    if bin.oauth.curr_business_id == '': 
+        return jsonify({'status':'error','message':'Not authenticated'})
+    
+    #bus_id = request.get_json().get('bus_id','')
+    bus_id = bin.oauth.curr_business_id
     types = request.get_json().get('types','').split(",")
     
     jobs = []
@@ -52,7 +56,12 @@ def ajax_job_detail_table():
 #######################
 @app.route("/ajax/ajax_business_get_drivers", methods=['POST'])
 def ajax_business_get_drivers():
-    id_bus = request.get_json().get('id_bus','')
+    #auth check
+    if bin.oauth.curr_business_id == '': 
+        return jsonify({'status':'error','message':'Not authenticated'})
+    
+    #id_bus = request.get_json().get('id_bus','')
+    id_bus = bin.oauth.curr_business_id
     types = request.get_json().get('types','').split(",")
     
     drivers = []
@@ -74,7 +83,12 @@ def ajax_business_get_drivers():
 
 @app.route("/ajax/ajax_driver_detail_table", methods=['POST'])
 def ajax_driver_detail_table():
-    id_bus = request.get_json().get('id_bus','')
+    #auth check
+    if bin.oauth.curr_business_id == '': 
+        return jsonify({'status':'error','message':'Not authenticated'})
+    
+    #id_bus = request.get_json().get('id_bus','')
+    id_bus = bin.oauth.curr_business_id
     id_driver = request.get_json().get('id_driver','')
 
     cursor = mysql.connection.cursor()

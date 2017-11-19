@@ -6,6 +6,7 @@ from bin import app, mysql
 
 @app.route("/register_business", methods=['POST'])
 def register_business():
+    #TODO check that the business is paying us before registering
     merchID =  request.get_json().get('merch_id','')
     merchName =  request.get_json().get('merch_name','')
     phoneNum=  request.get_json().get('phone_num','')
