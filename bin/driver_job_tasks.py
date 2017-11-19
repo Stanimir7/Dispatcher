@@ -1,7 +1,6 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template, url_for
-from bin import app, mysql
-do_sms=False
+from bin import app, mysql, do_sms
 
 ############################
 ######## Driver Claim Job Page ########

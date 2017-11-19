@@ -1,11 +1,25 @@
 from flask import Flask
 from flask_mysqldb import MySQL
 
+# Clover Stuff
+expected_client_id = 'AR9BJGD3R4BE2'
+client_secret = 'fdcb7b56-7518-0efa-d3f6-179e5fb94a8f'
+
+#Internal status constants
+SUCCESSFUL_AUTH = 'successful_clover_auth'
+
+#Internal Current Business ID; should be set on first access request by clover
+curr_business_id = ''
+
+#Current hostname. Needed to build clover auth stuff.
+hostname = 'http://ec2-52-23-224-226.compute-1.amazonaws.com'
+
+#Endpoint prefix. This is something configured in apache/wsgi; set here in variable for future-proofing
+endpoint_prefix = '/dispatcher'
+
 #Flask instance
 app = Flask(__name__)
 
-#SMS Flag
-do_sms = False
 
 ### MySQL ###
 mysql = MySQL()
@@ -20,6 +34,11 @@ mysql.init_app(app)
 @app.route("/")
 def hello():
     return "You probably meant to specify an endpoint."
+
+    #SMS Flag
+do_sms = False
+    #clover auth flag
+do_auth = True
 
 if __name__ == "__main__":
     app.run(debug=True)
