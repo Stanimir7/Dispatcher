@@ -12,7 +12,7 @@ def register_driver():
         
         #Connect to DB, call stored proc, close is handled automatically?
         cursor = mysql.connection.cursor()
-        cursor.callproc('new_driver',(_firstName, _lastName, _phoneNumber))
+        cursor.callproc('new_driver',[_firstName, _lastName, _phoneNumber])
         data = cursor.fetchall()
         cursor.close()
         #we are not expecting any data in response except in error
@@ -79,7 +79,7 @@ def format_deregister_driver():
                             }
                         )
                         
-            return render_template("deregister.html",
+            return render_template("driver_view_deregister.html",
                            title='Deregister',
                            user=user,
                            lines=lines)
@@ -155,4 +155,51 @@ def perform_deregister_driver():
     #return str(request.form)
     return 'end' #should never get here
 
-    
+
+#Register Driver with a business    
+@app.route("/apply_to_business/<unique_url>", methods=['GET','POST'])
+def apply_to_business(unique_url):
+    try:
+        phoneNumber = request.get_json().get('phone_number','')
+       # _phoneNumber = request.get_json().get('phone_number','')
+
+        #get driver from phone number
+        cursor = mysql.connection.cursor()
+        cursor.callproc('get_driver_from_phone', [phoneNumber])
+        data = cursor.fetchall()
+        cursor.close()
+
+        if len(data) is 0:
+            mysql.connection.rollback()
+            return jsonify({'status':'error','message':'Something went wrong, please try again.'})
+
+        
+        id_driver = data[0].get('idDriver')
+
+        #get business from unique_url
+        cursor = mysql.connection.cursor()
+        #TODO Not Correct Proc Call
+        cursor.callproc('get_business_from_url', [unique_url])
+        bus_data = cursor.fetchall()
+        cursor.close()
+
+        if len(bus_data) is 0:
+            mysql.connection.rollback()
+            return jsonify({'status':'error','message':'Something went wrong, please try again.'})
+        
+        id_business = bus_data[0].get('idBusiness')
+
+        cursor = mysql.connection.cursor()
+        cursor.callproc('new_business_driver', [id_driver, id_business])
+        new_data = cursor.fetchall()
+        cursor.close()
+        mysql.connection.commit()
+        if len(new_data) is 0:
+            return jsonify({'status':'success','message':'You have succesfuly applied to ' + bus_data[0].get('BusName')})
+        else:
+            return jsonify({'status':'success','message':'You already have a relationship with ' + bus_data[0].get('BusName')})
+
+    except Exception as e:
+        return jsonify({'status':str(e)})
+
+    return jsonify({'status':'error','message':'Something went wrong, please try again.'})

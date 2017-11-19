@@ -5,7 +5,7 @@ from flask_mysqldb import MySQL
 app = Flask(__name__)
 
 #SMS Flag
-do_sms = True
+do_sms = False
 
 ### MySQL ###
 mysql = MySQL()
@@ -26,6 +26,5 @@ if __name__ == "__main__":
     
     
 ### Modules ###
-from bin import create_job, register_business, driver_management, util
-
+from bin import views, views_ajax, business_job_tasks, business_driver_tasks, business_registration, driver_job_tasks, driver_registration, util
 

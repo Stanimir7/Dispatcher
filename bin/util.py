@@ -10,7 +10,7 @@ def confirm_code():
         
         #Connect to DB, call stored proc, close is handled automatically?
         cursor = mysql.connection.cursor()
-        cursor.callproc('get_driver',[_phoneNumber])
+        cursor.callproc('get_driver_from_phone',[_phoneNumber])
         data = cursor.fetchall()
         cursor.close() 
         if len(data) is 0:

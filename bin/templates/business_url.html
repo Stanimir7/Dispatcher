@@ -1,0 +1,75 @@
+{% extends "base_driver.html" %}
+
+{% block content %}
+	
+	<div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div id="bus_signup_card_content" class="card-content">
+            <h5>Apply to {{ bus_name }}</h5>
+            
+			<div class="row">
+			<form  id="bus_signup" class="col s12">
+            <div class="row">
+              <div class="input-field col s12">
+                <input name="phone_number" type="tel"  class="validate">
+                <label for="phone_number">Phone Number</label>
+              </div>
+			</div>
+              </form>
+            </div>
+          
+
+          
+		</div>
+		<div id="bus_signup_submit_button" class="card-action">
+		  <!--<button href="#!" class="modal-action modal-close waves-effect waves-green btn " type="submit" form="form_create_job">Submit</button>-->
+		  <button  href="#!" class="waves-effect waves-green btn " type="submit" form="bus_signup">Submit</button>
+		  
+		</div>
+
+        </div>
+      </div>
+    </div>
+
+
+{% endblock %}
+
+
+
+{% block script_extension %}
+    <script type="text/javascript">
+    /*******************
+     * Triggers
+     *******************/
+        /*******************
+         * Apply Submission
+         *******************/
+        $( "#bus_signup" ).submit(function( event ) {
+            
+            var formData = JSON.stringify(objectifyForm($("#bus_signup").serializeArray()));
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/apply_to_business/{{ unique_url }}",
+              data: formData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+                  $("#bus_signup_card_content").html(responseData.message);
+				  $("#bus_signup_submit_button").hide();
+				  
+
+			  }
+            });
+            
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            
+        });
+		
+		
+        
+        
+    </script>
+
+{% endblock %}

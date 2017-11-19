@@ -1,0 +1,326 @@
+{% extends "base_business.html" %}
+
+{% block nav_extension %}
+    <!--Tabs-->
+    <div class="nav-content">
+      <ul class="tabs tabs-transparent teal">
+        <li class="tab"><a class="active" href="#pending_drivers">Pending Drivers</a></li>
+        <li class="tab"><a href="#hired_drivers">Hired Drivers</a></li>
+        <li class="tab"><a href="#blocked_drivers">Blocked Drivers</a></li>
+        <!--<li class="tab"><a href="#test4">Test 3</a></li>-->
+      </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <!-- Pending Driver Tab -->
+    <div id="pending_drivers" class="col s12">
+      
+      <div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div class="card-content" style="padding:0">
+            
+            <table class="striped highlight-tr">
+              <thead>
+                <tr>
+                    <th>Driver ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Hire Status</th>
+                </tr>
+              </thead>
+            
+              <tbody id="pending_drivers_table_body">
+                <tr><td>No Pending Drivers</td></tr>
+              </tbody>
+            </table>
+            
+          </div>
+          <div class="card-action">
+            <a id="refresh_pending_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
+          </div>
+        </div>
+      </div>
+      </div>
+      
+    </div>
+    
+    
+    <!-- hired Driver Tab -->
+    <div id="hired_drivers" class="col s12">
+      
+      <div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div class="card-content" style="padding:0">
+            
+            <table class="striped highlight-tr">
+              <thead>
+                <tr>
+                    <th>Driver ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Hire Status</th>
+                </tr>
+              </thead>
+            
+              <tbody id="hired_drivers_table_body">
+                <tr><td>No hired Drivers</td></tr>
+              </tbody>
+            </table>
+            
+          </div>
+          <div class="card-action">
+            <a id="refresh_hired_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
+          </div>
+        </div>
+      </div>
+      </div>
+      
+    </div>
+    
+    
+    <!-- blocked Driver Tab -->
+    <div id="blocked_drivers" class="col s12">
+      
+      <div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div class="card-content" style="padding:0">
+            
+            <table class="striped highlight-tr">
+              <thead>
+                <tr>
+                    <th>Driver ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Hire Status</th>
+                </tr>
+              </thead>
+            
+              <tbody id="blocked_drivers_table_body">
+                <tr><td>No blocked Drivers</td></tr>
+              </tbody>
+            </table>
+            
+          </div>
+          <div class="card-action">
+            <a id="refresh_blocked_drivers" href="#!" class="waves-effect waves-green btn teal">Refresh</a>
+          </div>
+        </div>
+      </div>
+      </div>
+      
+    </div>
+    
+    
+
+    <!-- Driver Detail Dialog -->
+    <div id="driver_detail_modal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+          <button class="modal-action modal-close waves-effect waves-red btn-flat" style="position:absolute;top:0;right:0;"><i class="material-icons">close</i></button>
+          <div id="driver_detail_current_id" style="display: none"></div>
+          <div id="driver_detail_table">
+            <!--Will be replaced with driver detail via ajax-->
+          </div>
+          
+          
+      </div>
+      <div class="modal-footer">
+        <button href="#!" onclick="modDriver('hired')" class=" green modal-action modal-close waves-effect waves-light btn ">Hire Driver</button>
+        <button href="#!" onclick="modDriver('blocked')" class="red  modal-action modal-close waves-effect waves-light btn ">Block Driver</button>
+
+        <button href="#!" class=" blue modal-action modal-close waves-effect waves-light btn ">Close</button>
+        
+      </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    <!-- Generic Message Dialog -->
+    <div id="message_modal" class="modal">
+      <div class="modal-content">
+          <div id="message_modal_body">
+            
+            
+          </div>
+          
+          
+      </div>
+      <!--<div class="modal-footer">
+        <button href="#!" class="modal-action modal-close waves-effect waves-green btn ">Close</button>
+        
+      </div>-->
+    </div>
+    
+
+{% endblock %}
+
+
+{% block script_extension %}
+    <script type="text/javascript">
+    /*******************
+     * On Ready Trigger
+     *******************/
+      $(function() {
+        refreshAll();
+        startAutoRefresh();
+      });
+        function startAutoRefresh(){
+          setTimeout(startAutoRefresh,5000);
+          refreshAll();
+        }
+      
+      
+    /*******************
+     * Triggers
+     *******************/
+        /*******************
+         * Pending Driver Table Forced Refresh Button
+         *******************/
+        $( "#refresh_pending_drivers" ).click(function() {
+            
+            refreshDriverTable('pending',"pending_drivers_table_body");
+                
+        });
+        
+        
+        /*******************
+         * Hire Driver Table Forced Refresh Button
+         *******************/
+        $( "#refresh_hired_drivers" ).click(function() {
+            
+            refreshDriverTable('hired',"hired_drivers_table_body");
+                
+        });
+        
+        
+        /*******************
+         * blocked Driver Table Forced Refresh Button
+         *******************/
+        $( "#refresh_blocked_drivers" ).click(function() {
+            
+            refreshDriverTable('blocked',"blocked_drivers_table_body");
+                
+        });
+        
+    /*******************
+     * Functions
+     *******************/
+    
+        /*******************
+        * Refresh Driver Table
+        *
+        *   statusList: must be a comma delimited list of valid status types to return
+        *      Order is meaingful, the drivers will be returned in the order specified
+        *******************/
+        function refreshDriverTable(statusList,tableBodyID) {
+          var jsonData = JSON.stringify({
+                id_bus: {{ idBusiness }},
+                types: statusList
+            });
+            
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/ajax/ajax_business_get_drivers",
+              data: jsonData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+                  $("#" + tableBodyID).html(JSON.stringify(responseData));
+                },
+              error: function (errormessage) {
+                    //do something else
+                }
+            });
+            
+          
+        }
+        
+        /*******************
+        * Show Driver Detail Modal Function
+        *******************/
+        function showDriverDetail(idDriver){
+          
+          var jsonData = JSON.stringify({
+                id_bus: {{ idBusiness }},
+                id_driver: idDriver
+            });
+            
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/ajax/ajax_driver_detail_table",
+              data: jsonData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+                
+                
+                  $("#driver_detail_current_id ").html(JSON.stringify(responseData.id_driver));
+                  $("#driver_detail_table").html(JSON.stringify(responseData.table_html));
+                  $('#driver_detail_modal').modal('open');
+                  
+                },
+              error: function (errormessage) {
+                    //do something else
+                }
+            });
+          
+        }
+        
+        /*******************
+        * Business Mod Driver
+        *******************/
+        function modDriver(the_new_status){
+          var jsonData = JSON.stringify({
+                id_bus: {{ idBusiness }},
+                id_driver: $("#driver_detail_current_id ").html(),
+                new_status: the_new_status
+            });
+            
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/business_mod_driver",
+              data: jsonData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+                
+                  //TODO close progress indicator, show content
+                  //alert(JSON.stringify(responseData));
+                  refreshAll();
+                  
+                },
+              error: function (errormessage) {
+                    //do something else
+                }
+            });
+            
+            //TODO show progress indicator, hide content
+          
+        }
+        
+        
+        /*******************
+        * Refresh All Function
+        *   Laziness
+        *******************/
+        function refreshAll(){
+          refreshDriverTable('pending',"pending_drivers_table_body");
+          refreshDriverTable('hired',"hired_drivers_table_body");
+          refreshDriverTable('blocked',"blocked_drivers_table_body");
+        }
+        
+        
+        
+    
+    </script>
+
+{% endblock %}

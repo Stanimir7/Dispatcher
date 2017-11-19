@@ -1,0 +1,30 @@
+{% extends "base_driver.html" %}
+{% block content %}
+<br>
+<div class="w3-container">
+	<div class="w3-card-4">
+		<div class="w3-container w3-blue">
+		<h2>Dispatcher Job</h2>
+	</div>
+		<h1>Job for {{ bus_name }}</h1>
+		{% if job_title %}
+		<h2>Job Title: {{ job_title}}</h2>
+		{% endif %}
+		{% if bus_phone %}
+		<p><b>for more info, call: {{ bus_phone }}</b></p>
+		{% endif %}
+		<form id='cancel_form' action='/dispatcher/driver_close' method='post' accept-charset='UTF-8' class="w3-container">
+			<input type='hidden' name='unique_url' id='unique_url' value="{{unique_url}}"/>
+			<input type='hidden' name='status' id='status' value='canceled'/>
+			<span class="w3-container"><input type='submit' name='Cancel' value='Cancel' class="w3-btn w3-blue"/></span>
+		</form>
+		<form id='complete_form' action='/dispatcher/driver_close' method='post' accept-charset='UTF-8' class="w3-container">
+			<input type='hidden' name='unique_url' id='unique_url' value="{{unique_url}}"/>
+			<input type='hidden' name='status' id='status' value='complete'/>
+
+			<span class="w3-container"><input type='submit' name='Complete' value='Complete', class="w3-btn w3-blue"/></span>
+		</form>
+		<br>
+	</div>
+</div>
+{% endblock %}

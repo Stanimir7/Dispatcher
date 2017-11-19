@@ -1,0 +1,61 @@
+{% extends "base_driver.html" %}
+
+{% block content %}
+	
+	<div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div id="url_build_card_content" class="card-content">
+            <h5>Apply to {{ bus_name }}</h5>
+            
+			<div class="row">
+			<form id="url_build" class="col s12">
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="the-url" name="unique_url" type="text"  class="validate">
+                <label for="unique_url">Business Code:</label>
+              </div>
+			</div>
+              </form>
+            </div>
+          
+
+          
+		</div>
+		<div id="url_build_submit_button" class="card-action">
+		  <!--<button href="#!" class="modal-action modal-close waves-effect waves-green btn " type="submit" form="form_create_job">Submit</button>-->
+		  <button  href="#!" class="waves-effect waves-green btn " type="submit" form="url_build">Submit</button>
+		  
+		</div>
+
+        </div>
+      </div>
+    </div>
+
+
+{% endblock %}
+
+
+
+{% block script_extension %}
+    <script type="text/javascript">
+    /*******************
+     * Triggers
+     *******************/
+        /*******************
+         * Phone Number Submission
+         *******************/
+        $( "#url_build" ).submit(function( event ) {
+            
+            
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            window.location.href = "/dispatcher/business_url/" + $("#the-url").val();
+        });
+		
+		
+        
+        
+    </script>
+
+{% endblock %}
