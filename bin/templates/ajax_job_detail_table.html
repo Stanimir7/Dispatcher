@@ -1,7 +1,9 @@
 <ul class="collection with-header">
     <!--<li class="collection-header">Title:<b> </b></li>-->
     {% for key, value in single_job_detail.items() %}
-      <li class="collection-item">{{key}}: <b>{{value}}</b></li>
+        {% if key != \\n %}
+            <li class="collection-item">{{key}}: <b>{{value}}</b></li>
+        {% endif %}
     {% endfor %}
 </ul>
             
