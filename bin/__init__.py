@@ -1,6 +1,9 @@
 from flask import Flask
 from flask_mysqldb import MySQL
 
+#Flask instance
+app = Flask(__name__)
+
 # Clover Stuff
 expected_client_id = 'AR9BJGD3R4BE2'
 client_secret = 'fdcb7b56-7518-0efa-d3f6-179e5fb94a8f'
@@ -14,9 +17,10 @@ hostname = 'http://ec2-52-23-224-226.compute-1.amazonaws.com'
 #Endpoint prefix. This is something configured in apache/wsgi; set here in variable for future-proofing
 endpoint_prefix = '/dispatcher'
 
-#Flask instance
-app = Flask(__name__)
 
+#jinja
+app.jinja_env.trim_blocks = True
+app.jinja_env.lstrip_blocks = True
 
 ### MySQL ###
 mysql = MySQL()
@@ -34,8 +38,12 @@ def hello():
 
     #SMS Flag
 do_sms = False
-    #clover auth flag
+    #clover auth 
 do_auth = True
+use_debug_token = True
+use_debug_merch = False
+debug_token = '9b92a644-ea10-3efb-e37a-108b8178dff9'
+debug_merch = '2A8HAXYZ845P4'
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -172,7 +172,9 @@ def apply_to_business(unique_url):
         if len(data) is 0:
             mysql.connection.rollback()
             return jsonify({'status':'error','message':'Something went wrong, please try again.'})
-
+        
+        if data[0].get('Enrolled') == '0' or data[0].get('status') == 'error':
+            return jsonify({'status':'error','message':'You are not registered with Dispatcher. Please register with Dispatcher before applying to a specific Merchant.'})
         
         id_driver = data[0].get('idDriver')
 

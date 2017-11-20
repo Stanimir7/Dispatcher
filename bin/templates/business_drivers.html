@@ -256,15 +256,15 @@
             
             $.ajax({
               type: "POST",
-              url: "/dispatcher/ajax/ajax_driver_detail_table",
+              url: "/dispatcher/ajax/ajax_business_driver_detail_table",
               data: jsonData,
               dataType: "json",
               contentType : "application/json",
               success: function(responseData){
                 
                 
-                  $("#driver_detail_current_id ").html(JSON.stringify(responseData.id_driver));
-                  $("#driver_detail_table").html(JSON.stringify(responseData.table_html));
+                  $("#driver_detail_current_id ").html(responseData.id_driver.toString());
+                  $("#driver_detail_table").html(responseData.table_html.toString());
                   $('#driver_detail_modal').modal('open');
                   
                 },

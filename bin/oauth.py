@@ -1,15 +1,26 @@
 from flask import request, redirect, url_for, jsonify, render_template
 import requests
 import urllib.parse
-from bin import app, expected_client_id, client_secret, hostname, endpoint_prefix, SUCCESSFUL_AUTH, do_auth, mysql
+from bin import app, expected_client_id, client_secret, hostname, endpoint_prefix, SUCCESSFUL_AUTH, do_auth, mysql, use_debug_token, use_debug_merch, debug_token, debug_merch
 
 #Internal Current Business ID; should be set on first access request by clover
 curr_business_id = ''
+access_token = ''
+merch_id = ''
+
+
 # Call this to force authenication on the endpoint
 def force_auth(short_endpoint):
     global curr_business_id
+    global access_token
+    global merch_id
+    
+    #debug flags check
     if not do_auth:
         curr_business_id = '1'
+        return SUCCESSFUL_AUTH
+    
+    if valid_access_token():
         return SUCCESSFUL_AUTH
     
     full_endpoint = endpoint_prefix + short_endpoint
@@ -51,12 +62,37 @@ def force_auth(short_endpoint):
                            message='This business is not registered with Dispatcher. ')
                 mysql.connection.commit()
                 curr_business_id = data[0].get('idBusiness')
+                
+                if use_debug_token:
+                    access_token = debug_token
+                else:
+                    access_token = auth_response["access_token"]
+                    
+                if use_debug_merch:
+                    merch_id = debug_merch
+                else:               
+                    merch_id = supplied_merchant_id
+                
                 return SUCCESSFUL_AUTH
             else:
                 # FAILED_AUTH
                 return render_template('message.html',
                            title='Authenication Failure',
                            message='The authenication attempt failed.')
+            
+            
+#Check if access_token is valid
+def valid_access_token():
+    if( access_token == '' or merch_id == ''):
+        return False
+    
+    endpoint = "https://apisandbox.dev.clover.com/v3/merchants/" + str(merch_id) + "/address"
+    headers = {"Authorization":"Bearer " + str(access_token)}
+    
+    r = requests.get(endpoint,headers=headers)
+    return r.status_code == 200
+    #return str(r.status_code) + "|" + access_token + "|" + merch_id
+            
             
             
 #Called by clover ONLY

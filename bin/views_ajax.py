@@ -10,7 +10,7 @@ import bin.oauth
 def ajax_business_get_jobs():
     #auth check
     if bin.oauth.curr_business_id == '': 
-        return jsonify({'status':'error','message':'Not authenticated'})
+        return "Authenication Error. Please refresh the page."
     
     #bus_id = request.get_json().get('bus_id','')
     bus_id = bin.oauth.curr_business_id
@@ -23,7 +23,7 @@ def ajax_business_get_jobs():
         cursor.callproc('get_assoc_job_from_business',[bus_id, status])
         data = cursor.fetchall()
         cursor.close()
-        
+        mysql.connection.commit()
         if len(data) is not 0:
             jobs.extend(data)
     
@@ -33,7 +33,7 @@ def ajax_business_get_jobs():
     return jsonify(render_template('ajax_business_job_rows.html',
                            jobs=jobs))
 
-@app.route("/ajax/ajax_job_detail_table", methods=['POST'])
+@app.route("/ajax/ajax_business_job_detail_table", methods=['POST'])
 def ajax_job_detail_table():
     id_job = request.get_json().get('id_job','')
 
@@ -41,14 +41,39 @@ def ajax_job_detail_table():
     cursor.callproc('get_job',[id_job])
     data = cursor.fetchall()
     cursor.close()
-        
+    mysql.connection.commit()
     if len(data) is not 0:
         job = data[0]
-    
-    return jsonify({'id_job':id_job,
+        cursor = mysql.connection.cursor()
+        cursor.callproc('get_assoc_job_driver',[id_job])
+        data_driver = cursor.fetchall()
+        cursor.close()
+        mysql.connection.commit()
+        if data_driver[0].get('status') == 'success':
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT * FROM Driver WHERE idDriver = %s", [data_driver[0].get('idDriver')])
+            data_driver_detail = cursor.fetchall()
+            cursor.close()
+            mysql.connection.commit()
+            if len(data_driver_detail) is not 0:
+                return jsonify({'id_job':id_job,
                     'table_html':
-                    render_template('ajax_job_detail_table.html',
-                           single_job_detail=job)
+                    render_template('ajax_business_job_detail_table.html',
+                           single_job_detail=job,
+                           driver_detail=data_driver_detail[0]
+                           )
+                    })
+        return jsonify({'id_job':id_job,
+                    'table_html':
+                    render_template('ajax_business_job_detail_table.html',
+                           single_job_detail=job
+                           )
+                    })
+    else:
+        return jsonify({'id_job':id_job,
+                    'table_html':
+                    render_template('ajax_business_job_detail_table.html'
+                           )
                     })
 
 #######################
@@ -58,7 +83,7 @@ def ajax_job_detail_table():
 def ajax_business_get_drivers():
     #auth check
     if bin.oauth.curr_business_id == '': 
-        return jsonify({'status':'error','message':'Not authenticated'})
+        return "Authenication Error. Please refresh the page."
     
     #id_bus = request.get_json().get('id_bus','')
     id_bus = bin.oauth.curr_business_id
@@ -81,7 +106,7 @@ def ajax_business_get_drivers():
     return jsonify(render_template('ajax_business_driver_rows.html',
                            drivers=drivers))
 
-@app.route("/ajax/ajax_driver_detail_table", methods=['POST'])
+@app.route("/ajax/ajax_business_driver_detail_table", methods=['POST'])
 def ajax_driver_detail_table():
     #auth check
     if bin.oauth.curr_business_id == '': 
@@ -101,6 +126,6 @@ def ajax_driver_detail_table():
     
     return jsonify({'id_driver':id_driver,
                     'table_html':
-                    render_template('ajax_driver_detail_table.html',
+                    render_template('ajax_business_driver_detail_table.html',
                            single_driver_detail=driver)
                     })
