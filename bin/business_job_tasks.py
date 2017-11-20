@@ -51,6 +51,7 @@ def create_job():
         res = ''
         if data_create_job[0].get('status') != 'info':
             for row in data_create_job:
+                body = ''
                 unique_url = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(8))
     
                 cursor = mysql.connection.cursor()
