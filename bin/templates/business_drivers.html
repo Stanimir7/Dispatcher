@@ -45,6 +45,19 @@
       </div>
       </div>
       
+      <div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div class="card-content" >
+            
+            <p>Your unique driver application URL (give this to drivers):</p> <a href="{{ BusinessURL }}">{{ BusinessURL }}</a>
+            
+          </div>
+          
+        </div>
+      </div>
+      </div>
+      
     </div>
     
     
@@ -262,8 +275,10 @@
               contentType : "application/json",
               success: function(responseData){
                 
-                
+                if (responseData.status == 'success')
+                {
                   $("#driver_detail_current_id ").html(responseData.id_driver.toString());
+                }
                   $("#driver_detail_table").html(responseData.table_html.toString());
                   $('#driver_detail_modal').modal('open');
                   

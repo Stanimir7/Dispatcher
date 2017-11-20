@@ -78,7 +78,7 @@ def force_auth(short_endpoint):
                 # FAILED_AUTH
                 return render_template('message.html',
                            title='Authenication Failure',
-                           message='The authenication attempt failed.')
+                           message='Session expired, please close the app and login again.')
             
             
 #Check if access_token is valid

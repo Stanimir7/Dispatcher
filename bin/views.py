@@ -1,11 +1,21 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template
-from bin import app, mysql, do_sms, SUCCESSFUL_AUTH
+from bin import app, mysql, do_sms, SUCCESSFUL_AUTH, hostname, endpoint_prefix
 import bin.oauth
 
 ############################
 ######## Business ########
 ############################
+@app.route("/business_home", methods=['GET'])
+def business_home():
+     #auth check
+    auth_res = bin.oauth.force_auth("/business_home")
+    if auth_res == SUCCESSFUL_AUTH:
+         return render_template('business_home.html',
+                           title='Home Page')
+    else:
+        return auth_res #MUST DO THIS; handles redirects, auth failure, etc
+   
 
 @app.route("/business_jobs", methods=['GET'])
 def business_jobs():
@@ -25,9 +35,22 @@ def business_drivers():
     #auth check
     auth_res = bin.oauth.force_auth("/business_drivers")
     if auth_res == SUCCESSFUL_AUTH:
+        
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM Business WHERE idBusiness = %s", [ bin.oauth.curr_business_id])
+        data = cursor.fetchall()
+        cursor.close()
+        mysql.connection.commit()
+        
+        if len(data) is not 0:
+            BusinessURL = hostname + endpoint_prefix + "/business_url/" + data[0].get('BusinessURL')
+        else:
+            BusinessURL = "No URL Defined"
+        
         return render_template('business_drivers.html',
                            title='Drivers',
-                           idBusiness= bin.oauth.curr_business_id
+                           idBusiness= bin.oauth.curr_business_id,
+                           BusinessURL = BusinessURL
                            )
     else:
         return auth_res #MUST DO THIS; handles redirects, auth failure, etc

@@ -1,3 +1,4 @@
+<h5>Driver Detail</h5>
 <table class="striped">
 <thead>
   <tr>
@@ -26,3 +27,48 @@
   </tr>
 </tbody>
 </table>
+
+{% if jobs %}
+<h5>Job History</h5>
+<table class="striped">
+<thead>
+  <tr>
+      <th>Job ID</th>
+      <th>Job Title</th>
+      <th>Status</th>
+      <th>From Location</th>
+      <th>To Location</th>
+      <th>Creation Time</th>
+      <th>Closed Time</th>
+  </tr>
+</thead>
+
+<tbody id="active_jobs_table_body">
+  <tr>
+    <td>
+        {{jobs["idJob"]}}
+    </td>
+    <td>
+        {{jobs["JobTitle"]}}
+    </td>
+    <td>
+        {{jobs["JobStatus"]}}
+    </td>
+    <td>
+        {{jobs["FromLoc"]}}
+    </td>
+    <td>
+        {{jobs["ToLoc"]}}
+    </td>
+    <td>
+        {{jobs["JobCreateTime"]}}
+    </td>
+    <td>
+        {{jobs["JobCloseTime"]}}
+    </td>
+  </tr>
+</tbody>
+</table>
+{% else %}
+<p>No associated jobs.</p>
+{% endif %}

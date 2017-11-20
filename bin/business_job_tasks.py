@@ -1,6 +1,6 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template, url_for, redirect
-from bin import app, mysql, do_sms 
+from bin import app, mysql, do_sms, hostname
 from bin.sms import send_sms
 import bin.oauth
 
@@ -49,28 +49,28 @@ def create_job():
         mysql.connection.commit()
         
         res = ''
-        
-        for row in data_create_job:
-            unique_url = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(8))
-
-            cursor = mysql.connection.cursor()
-            cursor.callproc('new_job_driver_url',[row.get('idDriver'),row.get('idJob'),unique_url])
-            data = cursor.fetchall()
-            cursor.close()
-            if len(data) is 0:
-                mysql.connection.rollback()
-                return jsonify({'status': 'error','message': 'Empty DB Response3'})
-            elif data[0].get('status') == 'error': 
-                mysql.connection.rollback()
-                return jsonify(data_create_job[0])
-            mysql.connection.commit()
-            
-            body_link=url_for('claim_page',unique_url=unique_url)
-            body=body+" Claim link: "+body_link
-            if do_sms:
-                send_sms.send(row.get('PhoneNumber'), body)
+        if data_create_job[0].get('status') != 'info':
+            for row in data_create_job:
+                unique_url = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(8))
+    
+                cursor = mysql.connection.cursor()
+                cursor.callproc('new_job_driver_url',[row.get('idDriver'),row.get('idJob'),unique_url])
+                data = cursor.fetchall()
+                cursor.close()
+                if len(data) is 0:
+                    mysql.connection.rollback()
+                    return jsonify({'status': 'error','message': 'Empty DB Response3'})
+                elif data[0].get('status') == 'error': 
+                    mysql.connection.rollback()
+                    return jsonify(data_create_job[0])
+                mysql.connection.commit()
                 
-            res = res + '|' + body
+                body_link=hostname + url_for('claim_page',unique_url=unique_url)
+                body=body+" Claim link: "+body_link
+                if do_sms:
+                    send_sms.send(row.get('PhoneNumber'), body)
+                    
+                res = res + '|' + body
     except Exception as e:
         return jsonify({'status':str(e)})
     return jsonify({'status':'success'})
