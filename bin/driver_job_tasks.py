@@ -1,7 +1,7 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template, url_for
-from bin import app, mysql, do_sms
-
+from bin import app, mysql, do_sms, hostname
+from bin.sms import send_sms
 ############################
 ######## Driver Claim Job Page ########
 ############################
@@ -219,13 +219,13 @@ def driver_close():
                    cursor.close()
                    if len(url) is 0:
                        mysql.connection.rollback()
-                       #if you can't find a url for this job for this driver, skip them
-                   #assume you have the url
-                   mysql.connection.commit()
-                   body_link=url_for('claim_page',unique_url=url[0].get('URL'))
-                   body="A job has opened up again, claim link: "+body_link
-                   if do_sms:
-                       send_sms.send(row.get('PhoneNumber'), body)
+                   else:
+                        #if you can't find a url for this job for this driver, skip them
+                        mysql.connection.commit()
+                        body_link= hostname + url_for('claim_page',unique_url=url[0].get('URL'))
+                        body="A job has opened up again, claim link: "+body_link
+                        if do_sms:
+                            send_sms.send(row.get('PhoneNumber'), body)
 
                return render_template('driver_job_claim.html', #if canceled in error, allow them to claim again and return them to the claim page
                               title='Claim Job',
