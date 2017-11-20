@@ -131,6 +131,11 @@ def ajax_driver_detail_table():
     data = cursor.fetchall()
     cursor.close()
     mysql.connection.commit()
+    
+    
+    driver = {}
+    jobs = {}
+    
     if len(data) is not 0:
         driver = data[0]
         
