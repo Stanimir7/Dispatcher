@@ -15,7 +15,7 @@ def confirm_code():
                            'message':'You did not supply a valid phone number. Please try again.'})
 
         
-        #Connect to DB, call stored proc, close is handled automatically?
+        #Connect to DB, call stored proc
         cursor = mysql.connection.cursor()
         cursor.callproc('get_driver_from_phone',[p_num])
         data = cursor.fetchall()
@@ -43,7 +43,9 @@ def confirm_code():
                 mysql.connection.commit()
 
     except Exception as e:
-        res = jsonify({'status':str(e)})
+        res = jsonify({'status':'error',
+                       'message':'Whoops, please try again.',
+                       'debug':str(e)})
     return res
 
 # if valid phone number returns properly formatted num as string
