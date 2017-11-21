@@ -39,6 +39,12 @@ def format_deregister_driver():
         _key = request.form.get('key')
         _conf_code = request.form.get('conf_code')
         
+        if len(_conf_code) > 6:
+            return render_template('message.html',
+                           title='Incorrect Code',
+                           hide_mobile='true',
+                           message="Incorrect confirmation code.")
+        
         cursor = mysql.connection.cursor()
         cursor.callproc('check_confirm_code',[_key, _conf_code])
         data = cursor.fetchall()
@@ -95,7 +101,10 @@ def format_deregister_driver():
         
         
     except Exception as e:
-        return jsonify({'status':str(e)})
+        return render_template('message.html',
+                           title='Whoops',
+                           hide_mobile='true',
+                           message='Something went wrong, please try again.')
     return 'end' #should never get here
 
 
