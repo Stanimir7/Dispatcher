@@ -58,18 +58,19 @@
 </thead>
 
 <tbody id="active_jobs_table_body">
+  {% for row in driver_detail %}
   <tr>
     <td>
-        {{driver_detail["idDriver"]}}
+        {{row["idDriver"]}}
     </td>
     <td>
-        {{driver_detail["FirstName"]}}
+        {{row["FirstName"]}}
     </td>
     <td>
-        {{driver_detail["LastName"]}}
+        {{row["LastName"]}}
     </td>
     <td>
-        {{driver_detail["PhoneNumber"]}}
+        {{row["PhoneNumber"]}}
     </td>
     
   </tr>

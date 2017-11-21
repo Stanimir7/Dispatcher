@@ -44,29 +44,31 @@
 </thead>
 
 <tbody id="active_jobs_table_body">
+  {% for row in jobs %}
   <tr>
     <td>
-        {{jobs["idJob"]}}
+        {{row["idJob"]}}
     </td>
     <td>
-        {{jobs["JobTitle"]}}
+        {{row["JobTitle"]}}
     </td>
     <td>
-        {{jobs["JobStatus"]}}
+        {{row["JobStatus"]}}
     </td>
     <td>
-        {{jobs["FromLoc"]}}
+        {{row["FromLoc"]}}
     </td>
     <td>
-        {{jobs["ToLoc"]}}
+        {{row["ToLoc"]}}
     </td>
     <td>
-        {{jobs["JobCreateTime"]}}
+        {{row["JobCreateTime"]}}
     </td>
     <td>
-        {{jobs["JobCloseTime"]}}
+        {{row["JobCloseTime"]}}
     </td>
   </tr>
+  {% endfor %}
 </tbody>
 </table>
 {% else %}

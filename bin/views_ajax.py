@@ -66,7 +66,7 @@ def ajax_job_detail_table():
                     'table_html':
                     render_template('ajax_business_job_detail_table.html',
                            single_job_detail=job,
-                           driver_detail=data_driver_detail[0]
+                           driver_detail=data_driver_detail
                            )
                     })
         return jsonify({
@@ -145,7 +145,7 @@ def ajax_driver_detail_table():
         cursor.close()
         mysql.connection.commit()
         if len(data) is not 0:
-            jobs = data[0]
+            jobs = data
         
     
     

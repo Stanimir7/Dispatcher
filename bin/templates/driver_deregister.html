@@ -6,6 +6,11 @@
       <div class="col s12">
         <div class="card " style="margin-top: 10px">
           <div id="the_card_content" class="card-content">
+						
+						<div id="submit_progress" style="display: none" class="progress">
+                <div class="indeterminate"></div>
+            </div>
+						
 			<div  id="phone_content">
 				<h5>Driver Deregistration</h5>
 				
@@ -67,6 +72,11 @@
         $( "#phone_form" ).submit(function( event ) {
             
             var formData = JSON.stringify(objectifyForm($("#phone_form").serializeArray()));
+						
+						$("#phone_form_submit_button").hide();
+						$("#phone_content").hide();
+						$("#submit_progress").show();
+						
             $.ajax({
               type: "POST",
               url: "/dispatcher/confirm_code",
@@ -74,18 +84,21 @@
               dataType: "json",
               contentType : "application/json",
               success: function(responseData){
+								$("#submit_progress").hide();
                   //alert(JSON.stringify(responseData));
-				  if (typeof responseData.key !== 'undefined')
-                  {
-                    $("#the_key").val(responseData.key);
+										if (typeof responseData.key !== 'undefined')
+										{
+											
+											$("#the_key").val(responseData.key);
+
+										$("#confirm_code_submit_button").show();
+										$("#confirmcode_content").show();
 					
-					$("#phone_form_submit_button").hide();
-					$("#phone_content").hide();
-					
-					$("#confirm_code_submit_button").show();
-					$("#confirmcode_content").show();
-					
-                  } 
+                  } else if (responseData.status == 'error')
+									{
+										$("#the_card_content").html("<h5>" + responseData.message + "</h5>");
+										$("#phone_form_submit_button").hide();
+									}
 				  
 
 			  }
