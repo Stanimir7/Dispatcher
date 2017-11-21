@@ -55,7 +55,7 @@ def ajax_job_detail_table():
         mysql.connection.commit()
         if data_driver[0].get('status') == 'success':
             cursor = mysql.connection.cursor()
-            cursor.execute("SELECT * FROM Driver WHERE idDriver = %s", [data_driver[0].get('idDriver')])
+            cursor.execute("SELECT DISTINCT * FROM Driver WHERE idDriver = %s", [data_driver[0].get('idDriver')])
             data_driver_detail = cursor.fetchall()
             cursor.close()
             mysql.connection.commit()
@@ -140,7 +140,7 @@ def ajax_driver_detail_table():
         driver = data[0]
         
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT j.* FROM JobDriver d JOIN Job j ON (j.idJob = d.fk_idJob) WHERE fk_idDriver = %s", [id_driver])
+        cursor.execute("SELECT DISTINCT j.* FROM JobDriver d JOIN Job j ON (j.idJob = d.fk_idJob) WHERE fk_idDriver = %s", [id_driver])
         data = cursor.fetchall()
         cursor.close()
         mysql.connection.commit()
