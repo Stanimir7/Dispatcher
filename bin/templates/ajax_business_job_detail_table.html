@@ -1,0 +1,81 @@
+{% if single_job_detail %}
+<h5>Job Detail</h5>
+<table class="striped">
+<thead>
+  <tr>
+      <th>Job ID</th>
+      <th>Job Title</th>
+      <th>Status</th>
+      <th>From Location</th>
+      <th>To Location</th>
+      <th>Creation Time</th>
+      <th>Closed Time</th>
+  </tr>
+</thead>
+
+<tbody id="active_jobs_table_body">
+  <tr>
+    <td>
+        {{single_job_detail["idJob"]}}
+    </td>
+    <td>
+        {{single_job_detail["JobTitle"]}}
+    </td>
+    <td>
+        {{single_job_detail["JobStatus"]}}
+    </td>
+    <td>
+        {{single_job_detail["FromLoc"]}}
+    </td>
+    <td>
+        {{single_job_detail["ToLoc"]}}
+    </td>
+    <td>
+        {{single_job_detail["JobCreateTime"]}}
+    </td>
+    <td>
+        {{single_job_detail["JobCloseTime"]}}
+    </td>
+  </tr>
+</tbody>
+</table>
+ <p><b>Description:</b>{{single_job_detail["JobDesc"]}}</p>
+{% else %} 
+ No Detail Available
+{% endif %}
+ 
+{% if driver_detail %}
+<br />
+<h5>Associated Driver</h5>
+<table class="striped">
+<thead>
+  <tr>
+      <th>Driver ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Phone Number</th>
+  </tr>
+</thead>
+
+<tbody id="active_jobs_table_body">
+  {% for row in driver_detail %}
+  <tr>
+    <td>
+        {{row["idDriver"]}}
+    </td>
+    <td>
+        {{row["FirstName"]}}
+    </td>
+    <td>
+        {{row["LastName"]}}
+    </td>
+    <td>
+        {{row["PhoneNumber"]}}
+    </td>
+    
+  </tr>
+  
+  {% endfor %}
+</tbody>
+</table>
+{% endif %}

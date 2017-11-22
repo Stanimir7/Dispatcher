@@ -1,7 +1,6 @@
 import json, urllib, random, string
 from flask import request, jsonify, render_template
-from bin import app, mysql
-
+from bin import app, mysql, util
 
 @app.route("/register_driver", methods=['POST'])
 def register_driver():
@@ -10,9 +9,14 @@ def register_driver():
         _lastName = request.get_json().get('last_name','')
         _phoneNumber = request.get_json().get('phone_number','')
         
+        p_num = util.format_phone_number(_phoneNumber)
+        if p_num == '':
+            return jsonify({'status':"error",
+                           'message':'You did not supply a valid phone number. Please try again.'})
+           
         #Connect to DB, call stored proc, close is handled automatically?
         cursor = mysql.connection.cursor()
-        cursor.callproc('new_driver',[_firstName, _lastName, _phoneNumber])
+        cursor.callproc('new_driver',[_firstName, _lastName, p_num])
         data = cursor.fetchall()
         cursor.close()
         #we are not expecting any data in response except in error
@@ -35,6 +39,12 @@ def format_deregister_driver():
         _key = request.form.get('key')
         _conf_code = request.form.get('conf_code')
         
+        if len(_conf_code) > 6:
+            return render_template('message.html',
+                           title='Incorrect Code',
+                           hide_mobile='true',
+                           message="Incorrect confirmation code.")
+        
         cursor = mysql.connection.cursor()
         cursor.callproc('check_confirm_code',[_key, _conf_code])
         data = cursor.fetchall()
@@ -44,11 +54,13 @@ def format_deregister_driver():
             mysql.connection.rollback()
             return render_template('message.html',
                            title='Whoops',
+                           hide_mobile='true',
                            message='Something went wrong, please try again.')
         elif data[0].get('status') == 'invalid':
             mysql.connection.rollback()
             return render_template('message.html',
                            title='Incorrect Code',
+                           hide_mobile='true',
                            message="Incorrect confirmation code.")
         elif data[0].get('status') == 'success':
             
@@ -89,7 +101,10 @@ def format_deregister_driver():
         
         
     except Exception as e:
-        return jsonify({'status':str(e)})
+        return render_template('message.html',
+                           title='Whoops',
+                           hide_mobile='true',
+                           message='Something went wrong, please try again.')
     return 'end' #should never get here
 
 
@@ -109,11 +124,13 @@ def perform_deregister_driver():
             mysql.connection.rollback()
             return render_template('message.html',
                            title='Whoops',
+                           hide_mobile='true',
                            message='Something went wrong, please try again.')
         elif data[0].get('status') == 'invalid':
             mysql.connection.rollback()
             return render_template('message.html',
                            title='Incorrect Code',
+                           hide_mobile='true',
                            message="Incorrect confirmation code.")
         elif data[0].get('status') == 'success':
             mysql.connection.commit()
@@ -147,6 +164,7 @@ def perform_deregister_driver():
             #return  str(sql_list) + "|" + str(drop_all)
             return render_template('message.html',
                            title='Successful Deregistration',
+                           hide_mobile='true',
                            message='You have successfuly applied the changes.')
                         
 
@@ -161,20 +179,39 @@ def perform_deregister_driver():
 def apply_to_business(unique_url):
     try:
         phoneNumber = request.get_json().get('phone_number','')
-       # _phoneNumber = request.get_json().get('phone_number','')
+        
+        p_num = util.format_phone_number(phoneNumber)
+        if p_num == '':
+            return jsonify({'status':"error",
+                           'message':'You did not supply a valid phone number. Please try again.'})
 
+        
+        
         #get driver from phone number
         cursor = mysql.connection.cursor()
-        cursor.callproc('get_driver_from_phone', [phoneNumber])
+        cursor.callproc('get_driver_from_phone', [p_num])
         data = cursor.fetchall()
         cursor.close()
 
         if len(data) is 0:
             mysql.connection.rollback()
             return jsonify({'status':'error','message':'Something went wrong, please try again.'})
-
-        
+        mysql.connection.commit()
         id_driver = data[0].get('idDriver')
+        
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM Driver WHERE idDriver = %s", [id_driver])
+        data_driver_detail = cursor.fetchall()
+        cursor.close()
+        mysql.connection.commit()
+        if len(data_driver_detail) is 0:
+            return jsonify({'status':'error','message':'Something went wrong, please try again.'})
+        
+        
+        
+        if str(data_driver_detail[0].get('Enrolled')) == '0' or data_driver_detail[0].get('status') == 'error':
+            return jsonify({'status':'error','message':'You are not registered with Dispatcher. Please register with Dispatcher before applying to a specific Merchant.'})
+        
 
         #get business from unique_url
         cursor = mysql.connection.cursor()

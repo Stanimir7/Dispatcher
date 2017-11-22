@@ -222,7 +222,9 @@
                   }
                 },
               error: function (errormessage) {
-                    //do something else
+                //alert(JSON.stringify(errormessage));
+                    $("#create_job_progress").hide();
+                    $("#create_job_modal").modal('close');
                 }
             });
             
@@ -310,15 +312,19 @@
             
             $.ajax({
               type: "POST",
-              url: "/dispatcher/ajax/ajax_job_detail_table",
+              url: "/dispatcher/ajax/ajax_business_job_detail_table",
               data: jsonData,
               dataType: "json",
               contentType : "application/json",
               success: function(responseData){
                 
-                
-                  $("#job_detail_current_id ").html(JSON.stringify(responseData.id_job));
-                  $("#job_detail_table").html(JSON.stringify(responseData.table_html));
+                if (responseData.status == 'success')
+                {
+                  $("#job_detail_current_id ").html(responseData.id_job.toString());
+                  
+                  
+                } 
+                  $("#job_detail_table").html(responseData.table_html.toString());
                   $('#job_detail_modal').modal('open');
                   
                 },
