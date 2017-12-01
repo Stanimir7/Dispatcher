@@ -55,7 +55,14 @@
               dataType: "json",
               contentType : "application/json",
               success: function(responseData){
-                  $("#bus_signup_card_content").html(responseData.message);
+                  var message = responseData.message;
+                  if (responseData.message.startsWith("You are not registered with Dispatcher.")) {
+                      setTimeout(function() {
+                         window.location.href = "/dispatcher/driver_signup";
+                      }, 3000);
+                      message = "<h5>" + message + "</h5><p>Redirecting to driver signup after 3 seconds...</p>";
+                  }
+                  $("#bus_signup_card_content").html(message);
 				  $("#bus_signup_submit_button").hide();
 				  
 
