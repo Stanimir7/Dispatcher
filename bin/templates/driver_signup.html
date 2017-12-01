@@ -66,7 +66,10 @@
                   //alert(JSON.stringify(responseData));
                   if (responseData.status == "success")
                   {
-                    $("#signup_card_content").html("<h5>Successful Registration. Welcome to Dispatcher!</h5>");
+                    $("#signup_card_content").html("<h5>Successful Registration. Welcome to Dispatcher!</h5><p>Redirecting to driver home after 3 seconds...</p>");
+                    setTimeout(function() {
+                        window.location.href = "/dispatcher/driver_home";
+                    }, 3000);
                   } else if (responseData.status == "error")
                   {
                     $("#signup_card_content").html("<h5>" + responseData.message +"</h5>");
