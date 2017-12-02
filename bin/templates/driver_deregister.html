@@ -47,7 +47,7 @@
 		</div>
 		<div  class="card-action">
 		  <!--<button href="#!" class="modal-action modal-close waves-effect waves-green btn " type="submit" form="form_create_job">Submit</button>-->
-		  <button id="phone_form_submit_button"  href="#!" class="waves-effect waves-green btn " type="submit" form="phone_form">Submit</button>
+		  <button id="phone_form_submit_button"  href="#!" class="waves-effect waves-green btn " type="submit" disabled="disabled" form="phone_form">Submit</button>
 		  <button style="display: none" id="confirm_code_submit_button" class="waves-effect waves-green btn " type="submit" form="conf_form">Submit</button>
 		  
 		</div>
@@ -71,6 +71,21 @@
          *******************/
         $( "#phone_form" ).submit(function( event ) {
             
+		var empty = false;
+		$('.card_action').each(function(){
+			if($(this).val().length==0){
+				empty = true;
+			}
+		});
+		
+		if(empty){
+			$('.card_action button').attr('disabled', 'disabled');
+		}
+		else{
+			$('.actions input').removeAttr('disabled');
+		}
+		
+		
             var formData = JSON.stringify(objectifyForm($("#phone_form").serializeArray()));
 						
 						$("#phone_form_submit_button").hide();
