@@ -3,7 +3,8 @@ from flask import request, jsonify, render_template
 from bin import app, mysql
 
 
-
+#Allows a business to be added to the Dispatcher service by adding its info
+#to the Database
 @app.route("/register_business", methods=['POST'])
 def register_business():
     #TODO check that the business is paying us before registering
