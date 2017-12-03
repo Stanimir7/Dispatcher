@@ -9,6 +9,7 @@ import bin.oauth
 ######## Create Job ########
 ############################
 
+# Creates a new job from the info pulled from the json into the Database.
 @app.route("/create_job", methods=['POST','GET'])
 def create_job():
     #auth check
@@ -80,6 +81,7 @@ def create_job():
 ######## Cancel/Complete ########
 #################################
 
+#Closes a job by changing the status to cancel or complete.
 #TODO consolidate cancel/complete into:
 @app.route("/business_close_job", methods=['POST'])
 def business_close_job():
