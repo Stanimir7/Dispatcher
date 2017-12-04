@@ -1,3 +1,7 @@
+<!--Driver Detail Pop-Up -->
+<!--When clicking on a Driver, this Pop-up will display the Drivers:-->
+<!--ID#, First and last name, and their Phone# -->
+<!--It will also display any Jobs they've been associated with -->
 <h5>Driver Detail</h5>
 <table class="striped">
 <thead>
@@ -28,6 +32,8 @@
 </tbody>
 </table>
 
+<!--Here we check if the driver has completed any jobs with the Business-->
+<!--If they are not associated with any jobs, there will be no additional details -->
 {% if jobs %}
 <h5>Job History</h5>
 <table class="striped">
