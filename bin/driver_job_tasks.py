@@ -3,8 +3,11 @@ from flask import request, jsonify, render_template, url_for
 from bin import app, mysql, do_sms, hostname
 from bin.sms import send_sms
 ############################
-######## Driver Claim Job Page ########
+## Driver Claim Job Page ###
 ############################
+
+#Creates the page to allow a driver to claim a job. Once claimed, the associated driver should be able to
+#cancel or complete the job, while other drivers should be informed that the job was claimed. 
 @app.route("/claim_page/<unique_url>",methods=["POST","GET"])
 def claim_page(unique_url):
     #TODO: have this page be a manage job thing too, not just claim button
@@ -65,9 +68,10 @@ def claim_page(unique_url):
     return 'end' #should never get here
     
 ############################
-######## Claim Job Action ########
+##### Claim Job Action #####
 ############################
-	
+
+#Allows a driver (with a unique url) to claim a job and become the associated driver.
 @app.route("/claim_job/<unique_url>",methods=["POST","GET"])
 def claim_job(unique_url):
     if request.form.get('claim') is not None:
@@ -145,8 +149,10 @@ def claim_job(unique_url):
     return str(data_url)
 
 ############################
-######## Driver Cancel and Complete Job Action ########
+# Driver Cancel/Complete Job Action #
 ############################
+
+#Allows driver to cancel or complete a job.
 @app.route("/driver_close", methods=["POST","GET"])
 def driver_close():
     unique_url = request.form.get('unique_url')
