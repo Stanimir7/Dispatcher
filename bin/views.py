@@ -6,6 +6,8 @@ import bin.oauth
 ############################
 ######## Business ########
 ############################
+
+#Home Screen of Businesses
 @app.route("/business_home", methods=['GET'])
 def business_home():
      #auth check
@@ -16,7 +18,7 @@ def business_home():
     else:
         return auth_res #MUST DO THIS; handles redirects, auth failure, etc
    
-
+#View for Current and Completed/Cancelled Jobs
 @app.route("/business_jobs", methods=['GET'])
 def business_jobs():
     #auth check
@@ -29,7 +31,7 @@ def business_jobs():
     else:
         return auth_res #MUST DO THIS; handles redirects, auth failure, etc
     
-
+#View for Pending, Hired, and Blocked Drivers
 @app.route("/business_drivers", methods=['GET'])
 def business_drivers():
     #auth check
@@ -57,7 +59,7 @@ def business_drivers():
     
     
 
-
+#View for creating new Business
 @app.route("/business_new", methods=['GET'])
 def business_new():
     
@@ -89,6 +91,7 @@ def business_url(unique_url):
                            bus_name=bus_data[0].get('BusName'),
                            unique_url=unique_url)
 
+#View for driver tools
 @app.route("/driver_home", methods=['GET'])
 def driver_home():
     
@@ -96,13 +99,14 @@ def driver_home():
                            title='Driver Home'
                            )
 
+#view for driver sign-up with Dispatcher
 @app.route("/driver_signup", methods=['GET'])
 def driver_signup():
     
     return render_template('driver_signup.html',
                            title='Driver Signup'
                            )
-
+#View for Drivers deregistering with Dispatcher or Businesses
 @app.route("/driver_deregister", methods=['GET'])
 def driver_deregister():
     
@@ -110,6 +114,7 @@ def driver_deregister():
                            title='Driver Signup'
                            )
 
+#View for Drivers searching to apply to a specific Business
 @app.route("/driver_find_business", methods=['GET'])
 def driver_find_business():
     
