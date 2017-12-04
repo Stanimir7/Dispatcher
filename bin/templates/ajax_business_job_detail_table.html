@@ -1,3 +1,8 @@
+<!--Job Detail Pop-Up -->
+<!--When clicking on a Job, this will show the Job's: -->
+<!--ID#, Title, Status(Pending, Completed, Cancelled) -->
+<!--Starting Location, Destination, Time Created, Time Closed -->
+<!--It will also display Drivers associated with it -->
 {% if single_job_detail %}
 <h5>Job Detail</h5>
 <table class="striped">
@@ -44,6 +49,7 @@
  No Detail Available
 {% endif %}
  
+<!--Checks if there are any associated Drivers -->
 {% if driver_detail %}
 <br />
 <h5>Associated Driver</h5>
