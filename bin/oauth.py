@@ -122,6 +122,17 @@ def oauth_callback():
             # TODO: redirect to home page
             return jsonify({'status': 'success', 'message' : 'Received json data from clover: ' + str(r.json())})
 
+@app.route("/logout", methods=['POST','GET'])
+def logout():
+    # just make this work for now, make it more secure later
+    global curr_business_id
+    global access_token
+    global merch_id
+
+    access_token = ''
+    merch_id = ''
+
+    return redirect('/index.html')
 
 # Testing/debug endpoint
 @app.route("/test_authed_callback", methods=['POST', 'GET'])
