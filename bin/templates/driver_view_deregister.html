@@ -1,3 +1,5 @@
+<!--Deregisters Driver based specific businesses or Dispatcher all together -->
+<!-- -->
 {% extends "base_driver.html" %}
 {% block content %}
 	{% if user.nickname %}
@@ -14,7 +16,7 @@
 				<h5>Driver Deregistration</h5>
 				
 				<div class="row">
-					
+				<!--Driver must input their phone#, as well as a confirmation code sent to their phone -->	
 				<form id='format_form' action='/dispatcher/perform_deregister_driver' method='post' accept-charset='UTF-8' class="col s12">
 				<input type='hidden' name='key' id='key' value="{{ user.key }}"/>
 				<input type='hidden' name='conf_code' id='conf_code' value="{{ user.conf_code }}"/>
