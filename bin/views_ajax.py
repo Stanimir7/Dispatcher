@@ -9,11 +9,11 @@ import bin.oauth
 @app.route("/ajax/ajax_business_get_jobs", methods=['POST'])
 def ajax_business_get_jobs():
     #auth check
-    if bin.oauth.curr_business_id == '': 
+    bus_id = request.cookies.get('curr_business_id', default='')
+    if bus_id == '': 
         return '<p>Authenication Error. Please refresh the page.</p>'
     
     #bus_id = request.get_json().get('bus_id','')
-    bus_id = bin.oauth.curr_business_id
     types = request.get_json().get('types','').split(",")
     
     jobs = []
@@ -36,7 +36,7 @@ def ajax_business_get_jobs():
 @app.route("/ajax/ajax_business_job_detail_table", methods=['POST'])
 def ajax_job_detail_table():
     #auth check
-    if bin.oauth.curr_business_id == '': 
+    if request.cookies.get('curr_business_id', default='') == '': 
         return jsonify({'status':'error','table_html':'<p>Authenication Error. Please refresh the page.</p>'})
     
     id_job = request.get_json().get('id_job','')
@@ -92,11 +92,11 @@ def ajax_job_detail_table():
 @app.route("/ajax/ajax_business_get_drivers", methods=['POST'])
 def ajax_business_get_drivers():
     #auth check
-    if bin.oauth.curr_business_id == '': 
+    id_bus = request.cookies.get('curr_business_id', default='')
+    if id_bus == '': 
         return '<p>Authenication Error. Please refresh the page.</p>'
     
     #id_bus = request.get_json().get('id_bus','')
-    id_bus = bin.oauth.curr_business_id
     types = request.get_json().get('types','').split(",")
     
     drivers = []
@@ -119,11 +119,12 @@ def ajax_business_get_drivers():
 @app.route("/ajax/ajax_business_driver_detail_table", methods=['POST'])
 def ajax_driver_detail_table():
     #auth check
-    if bin.oauth.curr_business_id == '': 
+    
+    id_bus = request.cookies.get('curr_business_id', default='')
+    if id_bus == '': 
         return jsonify({'status':'error','table_html':'<p>Authenication Error. Please refresh the page.</p>'})
     
     #id_bus = request.get_json().get('id_bus','')
-    id_bus = bin.oauth.curr_business_id
     id_driver = request.get_json().get('id_driver','')
 
     cursor = mysql.connection.cursor()

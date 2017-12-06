@@ -6,7 +6,7 @@ import bin.oauth
 @app.route("/business_mod_driver", methods=['POST'])
 def business_mod_driver():
 	#auth check
-	if bin.oauth.curr_business_id == '': 
+	if request.cookies.get('curr_business_id', default='') == '':
 		return jsonify({'status':'error','message':'Not authenticated'})
 	
 	id_bus = request.get_json().get('id_bus','')

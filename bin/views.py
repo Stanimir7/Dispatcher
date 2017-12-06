@@ -10,7 +10,7 @@ import bin.oauth
 def business_home():
      #auth check
     auth_res = bin.oauth.force_auth("/business_home")
-    if auth_res == SUCCESSFUL_AUTH:
+    if auth_res.get_data().decode() == SUCCESSFUL_AUTH:
          return render_template('business_home.html',
                            title='Home Page')
     else:
@@ -21,10 +21,10 @@ def business_home():
 def business_jobs():
     #auth check
     auth_res = bin.oauth.force_auth("/business_jobs")
-    if auth_res == SUCCESSFUL_AUTH:
+    if auth_res.get_data().decode() == SUCCESSFUL_AUTH:
         return render_template('business_jobs.html',
                            title='Jobs',
-                           idBusiness = bin.oauth.curr_business_id
+                           idBusiness = request.cookies.get('curr_business_id', default='')
                            )
     else:
         return auth_res #MUST DO THIS; handles redirects, auth failure, etc
@@ -34,10 +34,10 @@ def business_jobs():
 def business_drivers():
     #auth check
     auth_res = bin.oauth.force_auth("/business_drivers")
-    if auth_res == SUCCESSFUL_AUTH:
+    if auth_res.get_data().decode() == SUCCESSFUL_AUTH:
         
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM Business WHERE idBusiness = %s", [ bin.oauth.curr_business_id])
+        cursor.execute("SELECT * FROM Business WHERE idBusiness = %s", [ request.cookies.get('curr_business_id', default='')])
         data = cursor.fetchall()
         cursor.close()
         mysql.connection.commit()
@@ -49,7 +49,7 @@ def business_drivers():
         
         return render_template('business_drivers.html',
                            title='Drivers',
-                           idBusiness= bin.oauth.curr_business_id,
+                           idBusiness= request.cookies.get('curr_business_id', default=''),
                            BusinessURL = BusinessURL
                            )
     else:

@@ -1,27 +1,27 @@
-from flask import request, redirect, url_for, jsonify, render_template
+from flask import request, redirect, url_for, jsonify, render_template, make_response
 import requests
 import urllib.parse
 from bin import app, expected_client_id, client_secret, hostname, endpoint_prefix, SUCCESSFUL_AUTH, do_auth, mysql, use_debug_token, use_debug_merch, debug_token, debug_merch
 
 #Internal Current Business ID; should be set on first access request by clover
-curr_business_id = ''
-access_token = ''
-merch_id = ''
+#curr_business_id = ''
+#access_token = ''
+#merch_id = ''
 
 
 # Call this to force authenication on the endpoint
 def force_auth(short_endpoint):
-    global curr_business_id
-    global access_token
-    global merch_id
+    #global curr_business_id
+    #global access_token
+    #global merch_id
     
     #debug flags check
     if not do_auth:
         curr_business_id = '1'
-        return SUCCESSFUL_AUTH
+        return make_response(SUCCESSFUL_AUTH)
     
     if valid_access_token():
-        return SUCCESSFUL_AUTH
+        return make_response(SUCCESSFUL_AUTH)
     
     full_endpoint = endpoint_prefix + short_endpoint
     
@@ -61,8 +61,10 @@ def force_auth(short_endpoint):
                            title='Not Registered',
                            message='This business is not registered with Dispatcher. ')
                 mysql.connection.commit()
-                curr_business_id = data[0].get('idBusiness')
+                curr_business_id = str(data[0].get('idBusiness'))
                 
+                access_token = ''
+                merch_id = ''
                 if use_debug_token:
                     access_token = debug_token
                 else:
@@ -72,8 +74,11 @@ def force_auth(short_endpoint):
                     merch_id = debug_merch
                 else:               
                     merch_id = supplied_merchant_id
-                
-                return SUCCESSFUL_AUTH
+                resp = make_response(SUCCESSFUL_AUTH)
+                resp.set_cookie('merch_id', merch_id)
+                resp.set_cookie('access_token', access_token)
+                resp.set_cookie('curr_business_id', curr_business_id)
+                return resp
             else:
                 # FAILED_AUTH
                 return render_template('message.html',
@@ -83,6 +88,8 @@ def force_auth(short_endpoint):
             
 #Check if access_token is valid
 def valid_access_token():
+    access_token = request.cookies.get('access_token')
+    merch_id = request.cookies.get('merch_id')
     if( access_token == '' or merch_id == ''):
         return False
     
@@ -120,19 +127,24 @@ def oauth_callback():
             return jsonify({'status': 'error', 'message': 'Received error from clover: ' + str(r.json())})
         else:
             # TODO: redirect to home page
-            return jsonify({'status': 'success', 'message' : 'Received json data from clover: ' + str(r.json())})
+            resp = make_response(jsonify({'status': 'success', 'message' : 'Received json data from clover: ' + str(r.json())}))
+            resp.set_cookie('merch_id', supplied_merchant_id)
+            return resp
 
 @app.route("/logout", methods=['POST','GET'])
 def logout():
     # just make this work for now, make it more secure later
-    global curr_business_id
-    global access_token
-    global merch_id
+    access_token = request.cookies.get('access_token', default = '')
+    resp = make_response(redirect('/index.html'))
+    if access_token != '':
+        resp.set_cookie('access_token', '')
+        resp.set_cookie('merch_id', '')
+    else:
+        resp = render_template('message.html',
+            title = 'Bad Logout Attempt',
+            message = 'Something went wrong.')
 
-    access_token = ''
-    merch_id = ''
-
-    return redirect('/index.html')
+    return resp
 
 # Testing/debug endpoint
 @app.route("/test_authed_callback", methods=['POST', 'GET'])
