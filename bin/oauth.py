@@ -1,7 +1,7 @@
 from flask import request, redirect, url_for, jsonify, render_template, make_response
-import requests
+import json, requests
 import urllib.parse
-from bin import app, expected_client_id, client_secret, hostname, endpoint_prefix, SUCCESSFUL_AUTH, do_auth, mysql, use_debug_token, use_debug_merch, debug_token, debug_merch
+from bin import app, expected_client_id, client_secret, hostname, endpoint_prefix, SUCCESSFUL_AUTH, do_auth, mysql, use_debug_token, use_debug_merch, debug_token, debug_merch, ALREADY_LOGGED_IN
 
 #Internal Current Business ID; should be set on first access request by clover
 #curr_business_id = ''
@@ -17,11 +17,13 @@ def force_auth(short_endpoint):
     
     #debug flags check
     if not do_auth:
+        # this may break with the current setup
         curr_business_id = '1'
         return make_response(SUCCESSFUL_AUTH)
     
     if valid_access_token():
-        return make_response(SUCCESSFUL_AUTH)
+        # already logged in
+        return jsonify({'status': 'success', 'message': ALREADY_LOGGED_IN})
     
     full_endpoint = endpoint_prefix + short_endpoint
     
@@ -74,22 +76,39 @@ def force_auth(short_endpoint):
                     merch_id = debug_merch
                 else:               
                     merch_id = supplied_merchant_id
-                resp = make_response(SUCCESSFUL_AUTH)
-                resp.set_cookie('merch_id', merch_id)
-                resp.set_cookie('access_token', access_token)
-                resp.set_cookie('curr_business_id', curr_business_id)
-                return resp
+                #resp = make_response(SUCCESSFUL_AUTH)
+                return jsonify({'status': 'success', 'message': SUCCESSFUL_AUTH,
+                    'cookie_data' : {'merch_id': merch_id, 'access_token': access_token, 'curr_business_id': curr_business_id}})
+                #resp.set_cookie('merch_id', merch_id)
+                #resp.set_cookie('access_token', access_token)
+                #resp.set_cookie('curr_business_id', curr_business_id)
+                #return resp
             else:
                 # FAILED_AUTH
                 return render_template('message.html',
                            title='Authenication Failure',
                            message='Session expired, please close the app and login again.')
             
+# endpoint is the endpoint this is occurring at
+# success_template_gen is a function that returns a rendered template
+# that is to be used upon successful auth
+def handle_auth(endpoint, success_template_gen):
+    auth_res = force_auth(endpoint)
+    if auth_res.mimetype == 'application/json':
+        data = json.loads(auth_res.get_data().decode())
+        if data['status'] == 'success':
+            resp = make_response(success_template_gen())
+            if data['message'] == SUCCESSFUL_AUTH:
+                for key in data['cookie_data']:
+                    resp.set_cookie(key, data['cookie_data'][key])
+            return resp
+    else:
+        return auth_res
             
 #Check if access_token is valid
 def valid_access_token():
-    access_token = request.cookies.get('access_token')
-    merch_id = request.cookies.get('merch_id')
+    access_token = request.cookies.get('access_token', default='')
+    merch_id = request.cookies.get('merch_id', default='')
     if( access_token == '' or merch_id == ''):
         return False
     
@@ -128,7 +147,7 @@ def oauth_callback():
         else:
             # TODO: redirect to home page
             resp = make_response(jsonify({'status': 'success', 'message' : 'Received json data from clover: ' + str(r.json())}))
-            resp.set_cookie('merch_id', supplied_merchant_id)
+            #resp.set_cookie('merch_id', supplied_merchant_id)
             return resp
 
 @app.route("/logout", methods=['POST','GET'])
@@ -137,6 +156,7 @@ def logout():
     access_token = request.cookies.get('access_token', default = '')
     resp = make_response(redirect('/index.html'))
     if access_token != '':
+        resp.set_cookie('curr_business_id', '')
         resp.set_cookie('access_token', '')
         resp.set_cookie('merch_id', '')
     else:

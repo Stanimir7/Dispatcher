@@ -8,54 +8,43 @@ import bin.oauth
 ############################
 @app.route("/business_home", methods=['GET'])
 def business_home():
-     #auth check
-    auth_res = bin.oauth.force_auth("/business_home")
-    if auth_res.get_data().decode() == SUCCESSFUL_AUTH:
-         return render_template('business_home.html',
+    #auth check
+    make_template = lambda: render_template('business_home.html',
                            title='Home Page')
-    else:
-        return auth_res #MUST DO THIS; handles redirects, auth failure, etc
+    return bin.oauth.handle_auth('/business_home', make_template)
    
 
 @app.route("/business_jobs", methods=['GET'])
 def business_jobs():
-    #auth check
-    auth_res = bin.oauth.force_auth("/business_jobs")
-    if auth_res.get_data().decode() == SUCCESSFUL_AUTH:
-        return render_template('business_jobs.html',
+    make_template = lambda: render_template('business_jobs.html',
                            title='Jobs',
                            idBusiness = request.cookies.get('curr_business_id', default='')
                            )
-    else:
-        return auth_res #MUST DO THIS; handles redirects, auth failure, etc
+    return bin.oauth.handle_auth('/business_jobs', make_template)
+
+def make_business_drivers_template():
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM Business WHERE idBusiness = %s", [ request.cookies.get('curr_business_id', default='')])
+    data = cursor.fetchall()
+    cursor.close()
+    mysql.connection.commit()
     
+    if len(data) is not 0:
+        BusinessURL = hostname + endpoint_prefix + "/business_url/" + data[0].get('BusinessURL')
+    else:
+        BusinessURL = "No URL Defined"
+    
+    return render_template('business_drivers.html',
+                       title='Drivers',
+                       idBusiness= request.cookies.get('curr_business_id', default=''),
+                       BusinessURL = BusinessURL
+                       )
+
 
 @app.route("/business_drivers", methods=['GET'])
 def business_drivers():
     #auth check
-    auth_res = bin.oauth.force_auth("/business_drivers")
-    if auth_res.get_data().decode() == SUCCESSFUL_AUTH:
-        
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM Business WHERE idBusiness = %s", [ request.cookies.get('curr_business_id', default='')])
-        data = cursor.fetchall()
-        cursor.close()
-        mysql.connection.commit()
-        
-        if len(data) is not 0:
-            BusinessURL = hostname + endpoint_prefix + "/business_url/" + data[0].get('BusinessURL')
-        else:
-            BusinessURL = "No URL Defined"
-        
-        return render_template('business_drivers.html',
-                           title='Drivers',
-                           idBusiness= request.cookies.get('curr_business_id', default=''),
-                           BusinessURL = BusinessURL
-                           )
-    else:
-        return auth_res #MUST DO THIS; handles redirects, auth failure, etc
-    
-    
+    return bin.oauth.handle_auth('/business_drivers', make_business_drivers_template)    
 
 
 @app.route("/business_new", methods=['GET'])
