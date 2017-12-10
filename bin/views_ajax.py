@@ -4,8 +4,10 @@ from bin import app, mysql, do_sms
 import bin.oauth
 
 #######################
-######## Business: Jobs #########
+### Business: Jobs ####
 #######################
+
+#Gets all Jobs in associated Business to later be displayed in a table.
 @app.route("/ajax/ajax_business_get_jobs", methods=['POST'])
 def ajax_business_get_jobs():
     #auth check
@@ -33,6 +35,7 @@ def ajax_business_get_jobs():
     return jsonify(render_template('ajax_business_job_rows.html',
                            jobs=jobs))
 
+#Gets all info about a specific job to later be displayed in a table.
 @app.route("/ajax/ajax_business_job_detail_table", methods=['POST'])
 def ajax_job_detail_table():
     #auth check
@@ -87,8 +90,10 @@ def ajax_job_detail_table():
                     })
 
 #######################
-###### Business: Drivers Info ########
+## Business: Drivers ##
 #######################
+
+#Gets all Drivers in associated Business to later be displayed in a table.
 @app.route("/ajax/ajax_business_get_drivers", methods=['POST'])
 def ajax_business_get_drivers():
     #auth check
@@ -116,6 +121,7 @@ def ajax_business_get_drivers():
     return jsonify(render_template('ajax_business_driver_rows.html',
                            drivers=drivers))
 
+#Gets all info about a specific driver to later be displayed in a table.
 @app.route("/ajax/ajax_business_driver_detail_table", methods=['POST'])
 def ajax_driver_detail_table():
     #auth check

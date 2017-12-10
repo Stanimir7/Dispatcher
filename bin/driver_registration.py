@@ -2,6 +2,12 @@ import json, urllib, random, string
 from flask import request, jsonify, render_template
 from bin import app, mysql, util
 
+############################
+##### Register Driver ######
+############################
+
+#Allows a Driver to add themselves to the system by adding their
+#info to the Database.
 @app.route("/register_driver", methods=['POST'])
 def register_driver():
     try:
@@ -33,6 +39,11 @@ def register_driver():
         res = jsonify({'status':str(e)})
     return res
 
+############################
+# Format Deregister Driver #
+############################
+
+#Checks the format of the submitted confirmation code to confirm it is valid
 @app.route("/format_deregister_driver", methods=['GET','POST'])
 def format_deregister_driver():
     try:
@@ -102,7 +113,12 @@ def format_deregister_driver():
                            message='Something went wrong, please try again.')
     return 'end' #should never get here
 
+############################
+#### Deregister Driver #####
+############################
 
+#If confirmation code is valid, removes Driver from requested business(es)
+#or from the System entirely
 @app.route("/perform_deregister_driver", methods=['GET','POST'])
 def perform_deregister_driver():
     try:
@@ -175,7 +191,10 @@ def perform_deregister_driver():
     #return str(request.form)
     return 'end' #should never get here
 
-
+############################
+#### Apply To Business #####
+############################
+  
 #Register Driver with a business    
 @app.route("/apply_to_business/<unique_url>", methods=['GET','POST'])
 def apply_to_business(unique_url):
@@ -242,4 +261,3 @@ def apply_to_business(unique_url):
         return jsonify({'status':str(e)})
 
     return jsonify({'status':'error','message':'Something went wrong, please try again.'})
-

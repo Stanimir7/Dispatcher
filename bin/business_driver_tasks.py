@@ -3,6 +3,9 @@ from flask import request, jsonify, render_template, url_for, redirect
 from bin import app, mysql, do_sms
 import bin.oauth
 
+#This allows the business to modify a driver's status and allows them to be moved between
+#the Pending, Hired, and Blocked lists. The new status is pulled from the json along with
+#the specified Driver and Business and updates the Database accordingly. 
 @app.route("/business_mod_driver", methods=['POST'])
 def business_mod_driver():
 	#auth check

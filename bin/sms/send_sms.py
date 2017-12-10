@@ -9,6 +9,7 @@ client = Client(account_sid, auth_token)
 my_twilio_number = "+18564463454"
 dest_cell_number = "+1"
 
+#Send a sms through Twilio with a specified message
 def send(_num, _body):
 	message = client.messages.create(
 		to = _num,

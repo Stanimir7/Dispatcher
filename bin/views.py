@@ -6,6 +6,8 @@ import bin.oauth
 ############################
 ######## Business ########
 ############################
+
+#Home Screen of Businesses
 @app.route("/business_home", methods=['GET'])
 def business_home():
     #auth check
@@ -13,7 +15,7 @@ def business_home():
                            title='Home Page')
     return bin.oauth.handle_auth('/business_home', make_template)
    
-
+# view generator upon successful auth for the /business_jobs endpoint
 def make_business_jobs_template():
     cursor = mysql.connection.cursor()
     cursor.callproc('get_business', [request.cookies.get('curr_business_id', default='')])
@@ -33,11 +35,12 @@ def make_business_jobs_template():
 			                     address1 = from_loc
                            )
         
-    
+#View for Current and Completed/Cancelled Jobs    
 @app.route("/business_jobs", methods=['GET'])
 def business_jobs():
     return bin.oauth.handle_auth('/business_jobs', make_business_jobs_template)
 
+# view generator upon successful auth for the /business_driver endpoint                               
 def make_business_drivers_template():
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM Business WHERE idBusiness = %s", [ request.cookies.get('curr_business_id', default='')])
@@ -50,18 +53,13 @@ def make_business_drivers_template():
     else:
         BusinessURL = "No URL Defined"
     
-    return render_template('business_drivers.html',
-                       title='Drivers',
-                       idBusiness= request.cookies.get('curr_business_id', default=''),
-                       BusinessURL = BusinessURL
-                       )
-
+#View for Pending, Hired, and Blocked Drivers                               
 @app.route("/business_drivers", methods=['GET'])
 def business_drivers():
     #auth check
     return bin.oauth.handle_auth('/business_drivers', make_business_drivers_template)    
 
-
+#View for creating new Business
 @app.route("/business_new", methods=['GET'])
 def business_new():
     
@@ -93,6 +91,7 @@ def business_url(unique_url):
                            bus_name=bus_data[0].get('BusName'),
                            unique_url=unique_url)
 
+#View for driver tools
 @app.route("/driver_home", methods=['GET'])
 def driver_home():
     
@@ -100,13 +99,14 @@ def driver_home():
                            title='Driver Home'
                            )
 
+#view for driver sign-up with Dispatcher
 @app.route("/driver_signup", methods=['GET'])
 def driver_signup():
     
     return render_template('driver_signup.html',
                            title='Driver Signup'
                            )
-
+#View for Drivers deregistering with Dispatcher or Businesses
 @app.route("/driver_deregister", methods=['GET'])
 def driver_deregister():
     
@@ -114,6 +114,7 @@ def driver_deregister():
                            title='Driver Signup'
                            )
 
+#View for Drivers searching to apply to a specific Business
 @app.route("/driver_find_business", methods=['GET'])
 def driver_find_business():
     

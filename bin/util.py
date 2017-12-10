@@ -3,6 +3,11 @@ from flask import request, jsonify, render_template
 from bin import app, mysql, do_sms
 from bin.sms import send_sms
 
+############################
+####### Confirm Code #######
+############################
+
+#Checks that a phone number is valid then creates a unique confirmation code.
 @app.route("/confirm_code", methods=['POST'])
 def confirm_code():
     try:
@@ -47,6 +52,10 @@ def confirm_code():
                        'message':'Whoops, please try again.',
                        'debug':str(e)})
     return res
+
+############################
+### Format Phone Number ####
+############################
 
 # if valid phone number returns properly formatted num as string
 #   otherwise, ""
