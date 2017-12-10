@@ -10,6 +10,7 @@ client_secret = 'fdcb7b56-7518-0efa-d3f6-179e5fb94a8f'
 
 #Internal status constants
 SUCCESSFUL_AUTH = 'successful_clover_auth'
+ALREADY_LOGGED_IN = 'already_logged_in'
 
 #Current hostname. Needed to build clover auth stuff.
 hostname = 'http://ec2-52-23-224-226.compute-1.amazonaws.com'
@@ -37,10 +38,10 @@ def hello():
     return "You probably meant to specify an endpoint."
 
     #SMS Flag
-do_sms = False
+do_sms = True
     #clover auth 
 do_auth = True
-use_debug_token = True
+use_debug_token = False
 use_debug_merch = False
 debug_token = '9b92a644-ea10-3efb-e37a-108b8178dff9'
 debug_merch = '2A8HAXYZ845P4'

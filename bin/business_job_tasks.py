@@ -13,7 +13,7 @@ import bin.oauth
 @app.route("/create_job", methods=['POST','GET'])
 def create_job():
     #auth check
-    if bin.oauth.curr_business_id == '': 
+    if request.cookies.get('curr_business_id',default='') == '': 
         return jsonify({'status':'error','message':'Not authenticated'})
     try:
         body=""
@@ -86,7 +86,7 @@ def create_job():
 @app.route("/business_close_job", methods=['POST'])
 def business_close_job():
     #auth check
-    if bin.oauth.curr_business_id == '': 
+    if request.cookies.get('curr_business_id', default='') == '': 
         return jsonify({'status':'error','message':'Not authenticated'})
     job_id =  request.get_json().get('job_id','')
     action =  request.get_json().get('action','')

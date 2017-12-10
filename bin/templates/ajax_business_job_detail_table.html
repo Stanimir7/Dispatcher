@@ -51,7 +51,6 @@
  
 <!--Checks if there are any associated Drivers -->
 {% if driver_detail %}
-<br />
 <h5>Associated Driver</h5>
 <table class="striped">
 <thead>
@@ -84,4 +83,6 @@
   {% endfor %}
 </tbody>
 </table>
+{% else %}
+<p>No associated drivers.</p>
 {% endif %}

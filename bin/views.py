@@ -10,54 +10,54 @@ import bin.oauth
 #Home Screen of Businesses
 @app.route("/business_home", methods=['GET'])
 def business_home():
-     #auth check
-    auth_res = bin.oauth.force_auth("/business_home")
-    if auth_res == SUCCESSFUL_AUTH:
-         return render_template('business_home.html',
+    #auth check
+    make_template = lambda: render_template('business_home.html',
                            title='Home Page')
-    else:
-        return auth_res #MUST DO THIS; handles redirects, auth failure, etc
+    return bin.oauth.handle_auth('/business_home', make_template)
    
-#View for Current and Completed/Cancelled Jobs
+# view generator upon successful auth for the /business_jobs endpoint
+def make_business_jobs_template():
+    cursor = mysql.connection.cursor()
+    cursor.callproc('get_business', [request.cookies.get('curr_business_id', default='')])
+    bus_data = cursor.fetchall()
+    cursor.close()
+    bus_phone = ""
+    from_loc = ""
+    if len(bus_data) is 0 or bus_data[0].get('status') == 'error':
+        mysql.connection.rollback()
+    else:
+        bus_phone = bus_data[0].get('DefaultPhone')
+        from_loc = bus_data[0].get('DefaultAddress')
+    return render_template('business_jobs.html',
+                           title='Jobs',
+                           idBusiness = bin.oauth.curr_business_id,
+			                     phoneNumber = bus_phone,
+			                     address1 = from_loc
+                           )
+        
+#View for Current and Completed/Cancelled Jobs    
 @app.route("/business_jobs", methods=['GET'])
 def business_jobs():
-    #auth check
-    auth_res = bin.oauth.force_auth("/business_jobs")
-    if auth_res == SUCCESSFUL_AUTH:
-        return render_template('business_jobs.html',
-                           title='Jobs',
-                           idBusiness = bin.oauth.curr_business_id
-                           )
-    else:
-        return auth_res #MUST DO THIS; handles redirects, auth failure, etc
+    return bin.oauth.handle_auth('/business_jobs', make_business_jobs_template)
+
+# view generator upon successful auth for the /business_driver endpoint                               
+def make_business_drivers_template():
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM Business WHERE idBusiness = %s", [ request.cookies.get('curr_business_id', default='')])
+    data = cursor.fetchall()
+    cursor.close()
+    mysql.connection.commit()
     
-#View for Pending, Hired, and Blocked Drivers
+    if len(data) is not 0:
+        BusinessURL = hostname + endpoint_prefix + "/business_url/" + data[0].get('BusinessURL')
+    else:
+        BusinessURL = "No URL Defined"
+    
+#View for Pending, Hired, and Blocked Drivers                               
 @app.route("/business_drivers", methods=['GET'])
 def business_drivers():
     #auth check
-    auth_res = bin.oauth.force_auth("/business_drivers")
-    if auth_res == SUCCESSFUL_AUTH:
-        
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM Business WHERE idBusiness = %s", [ bin.oauth.curr_business_id])
-        data = cursor.fetchall()
-        cursor.close()
-        mysql.connection.commit()
-        
-        if len(data) is not 0:
-            BusinessURL = hostname + endpoint_prefix + "/business_url/" + data[0].get('BusinessURL')
-        else:
-            BusinessURL = "No URL Defined"
-        
-        return render_template('business_drivers.html',
-                           title='Drivers',
-                           idBusiness= bin.oauth.curr_business_id,
-                           BusinessURL = BusinessURL
-                           )
-    else:
-        return auth_res #MUST DO THIS; handles redirects, auth failure, etc
-    
-    
+    return bin.oauth.handle_auth('/business_drivers', make_business_drivers_template)    
 
 #View for creating new Business
 @app.route("/business_new", methods=['GET'])
