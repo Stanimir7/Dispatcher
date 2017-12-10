@@ -39,11 +39,6 @@ def format_deregister_driver():
         _key = request.form.get('key')
         _conf_code = request.form.get('conf_code')
         
-        if len(_conf_code) > 6:
-            return render_template('message.html',
-                           title='Incorrect Code',
-                           hide_mobile='true',
-                           message="Incorrect confirmation code.")
         
         cursor = mysql.connection.cursor()
         cursor.callproc('check_confirm_code',[_key, _conf_code])
@@ -128,10 +123,17 @@ def perform_deregister_driver():
                            message='Something went wrong, please try again.')
         elif data[0].get('status') == 'invalid':
             mysql.connection.rollback()
-            return render_template('message.html',
-                           title='Incorrect Code',
-                           hide_mobile='true',
-                           message="Incorrect confirmation code.")
+            #return render_template('message.html',
+            #               title='Incorrect Code',
+            #               hide_mobile='true',
+            #               message="Incorrect confirmation code.")
+            
+            return render_template('driver_deregister.html',
+                           title='Driver Signup',
+                           incorrect='Incorrect Confirmation Code'
+                           )
+        
+        
         elif data[0].get('status') == 'success':
             mysql.connection.commit()
             id_driver = data[0].get('idDriver')
@@ -240,3 +242,4 @@ def apply_to_business(unique_url):
         return jsonify({'status':str(e)})
 
     return jsonify({'status':'error','message':'Something went wrong, please try again.'})
+

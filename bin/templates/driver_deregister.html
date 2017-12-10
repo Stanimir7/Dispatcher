@@ -2,6 +2,10 @@
 
 {% block content %}
 	
+	{% if incorrect %}
+	<p>incorrect</p>
+	{% endif %}
+	
 	<div class="row">
       <div class="col s12">
         <div class="card " style="margin-top: 10px">
@@ -47,7 +51,7 @@
 		</div>
 		<div  class="card-action">
 		  <!--<button href="#!" class="modal-action modal-close waves-effect waves-green btn " type="submit" form="form_create_job">Submit</button>-->
-		  <button id="phone_form_submit_button"  href="#!" class="waves-effect waves-green btn " type="submit"  form="phone_form">Submit</button>
+		  <button id="phone_form_submit_button"  href="#!" class="waves-effect waves-green btn " type="submit" form="phone_form">Submit</button>
 		  <button style="display: none" id="confirm_code_submit_button" class="waves-effect waves-green btn " type="submit" form="conf_form">Submit</button>
 		  
 		</div>
@@ -63,6 +67,21 @@
 
 {% block script_extension %}
     <script type="text/javascript">
+		/*******************
+     * On Ready Trigger
+     *******************/
+		{% if incorrect %}
+	
+      $(function() {
+        $("#phone_form_submit_button").hide();
+				$("#phone_content").hide();
+				$("#confirm_code_submit_button").show();
+				$("#confirmcode_content").show();
+      });
+			
+		{% endif %}
+			
+			
     /*******************
      * Triggers
      *******************/
@@ -71,9 +90,6 @@
          *******************/
         $( "#phone_form" ).submit(function( event ) {
             
-		
-		
-		
             var formData = JSON.stringify(objectifyForm($("#phone_form").serializeArray()));
 						
 						$("#phone_form_submit_button").hide();
