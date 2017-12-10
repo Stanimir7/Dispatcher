@@ -41,7 +41,7 @@ def hello():
 do_sms = True
     #clover auth 
 do_auth = True
-use_debug_token = False
+use_debug_token = True # LEAVE TURNED ON, clover dev sandbox does not allow pro grammatically generated tokens, must use token manually generated using their web interface
 use_debug_merch = False
 debug_token = '9b92a644-ea10-3efb-e37a-108b8178dff9'
 debug_merch = '2A8HAXYZ845P4'
