@@ -14,13 +14,29 @@ def business_home():
     return bin.oauth.handle_auth('/business_home', make_template)
    
 
+def make_business_jobs_template():
+    cursor = mysql.connection.cursor()
+    cursor.callproc('get_business', [request.cookies.get('curr_business_id', default='')])
+    bus_data = cursor.fetchall()
+    cursor.close()
+    bus_phone = ""
+    from_loc = ""
+    if len(bus_data) is 0 or bus_data[0].get('status') == 'error':
+        mysql.connection.rollback()
+    else:
+        bus_phone = bus_data[0].get('DefaultPhone')
+        from_loc = bus_data[0].get('DefaultAddress')
+    return render_template('business_jobs.html',
+                           title='Jobs',
+                           idBusiness = bin.oauth.curr_business_id,
+			                     phoneNumber = bus_phone,
+			                     address1 = from_loc
+                           )
+        
+    
 @app.route("/business_jobs", methods=['GET'])
 def business_jobs():
-    make_template = lambda: render_template('business_jobs.html',
-                           title='Jobs',
-                           idBusiness = request.cookies.get('curr_business_id', default='')
-                           )
-    return bin.oauth.handle_auth('/business_jobs', make_template)
+    return bin.oauth.handle_auth('/business_jobs', make_business_jobs_template)
 
 def make_business_drivers_template():
     cursor = mysql.connection.cursor()
@@ -39,7 +55,6 @@ def make_business_drivers_template():
                        idBusiness= request.cookies.get('curr_business_id', default=''),
                        BusinessURL = BusinessURL
                        )
-
 
 @app.route("/business_drivers", methods=['GET'])
 def business_drivers():
