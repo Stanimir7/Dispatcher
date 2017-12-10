@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block nav_main %} 
+    <ul class="right hide-on-med-and-down">
+    
+    <li><a href="/dispatcher/business_jobs" class="">Jobs</a></li>
+    <li><a href="/dispatcher/business_drivers" class="">Drivers</a></li>
+    <li><a href="/dispatcher/logout" class="waves-effect waves-light btn yellow darken-3">Logout</a></li>
+    </ul>
+    
+    <!--Nav drawer content, only appears on small screen sizes-->
+    <ul class="side-nav" id="nav-mobile">
+    <h5 class="teal-text text-darken-3" style="margin-left:15px">Dispatcher</h5>
+    <hr>
+    <li><a href="/dispatcher/business_jobs" class=" teal-text text-darken-3">Jobs</a></li>
+    <li><a href="/dispatcher/business_drivers" class=" teal-text text-darken-3">Drivers</a></li>
+    <br>
+    <li><a href="/dispatcher/logout" class="waves-effect waves-light btn teal darken-4">Logout</a></li>
+    </ul>
+              
+{% endblock %}  

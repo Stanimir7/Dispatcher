@@ -1,0 +1,32 @@
+{% extends "base_driver.html" %}
+{% block content %}
+<br>
+<h2 style="text-indent:5mm">Job Available for {{bus_name}}</h2>
+<div class="card">
+    <div class="card-content">
+        {% if job_title %}
+        <h3>{{job_title}}</h3>
+        {% endif %}
+        <p class="caption"><b>
+        {% if job_desc %}
+        {{job_desc}}<br>
+        {% endif %}
+        {% if from_loc %}
+        From: {{from_loc}}<br>
+        {% endif %}
+        {% if to_loc %}
+        To: {{to_loc}}<br>
+        {% endif %}
+        {% if bus_phone %}
+        For more info, call: {{bus_phone}}
+        {% endif %} 
+	<br>
+        </b></p>
+        <form id='claim_form' style="margin-top: 1em" action='/dispatcher/claim_job/{{unique_url}}' method='post' accept-charset='UTF-8' class="waves-effect waves-light btn">
+            <input type='hidden' name='unique_url' id='unique_url' value="{{ unique_url }}"/>
+            <span class="w3-container"><input type='submit' name='Claim' value='claim' class="waves-effect waves-light w3-btn w3-blue" /></span>
+        </form>
+        <br>
+    </div>
+</div>
+{% endblock %}
