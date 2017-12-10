@@ -2,6 +2,10 @@
 
 {% block content %}
 	
+	{% if incorrect %}
+	<p>incorrect</p>
+	{% endif %}
+	
 	<div class="row">
       <div class="col s12">
         <div class="card " style="margin-top: 10px">
@@ -63,6 +67,21 @@
 
 {% block script_extension %}
     <script type="text/javascript">
+		/*******************
+     * On Ready Trigger
+     *******************/
+		{% if incorrect %}
+	
+      $(function() {
+        $("#phone_form_submit_button").hide();
+				$("#phone_content").hide();
+				$("#confirm_code_submit_button").show();
+				$("#confirmcode_content").show();
+      });
+			
+		{% endif %}
+			
+			
     /*******************
      * Triggers
      *******************/
