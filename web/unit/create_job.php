@@ -4,14 +4,13 @@
 
 //API Url
 $url = 'localhost/dispatcher/create_job';
-
  
 //Initiate cURL.
 $ch = curl_init($url);
  
 //The JSON data.
 $jsonData = array(
-    'merch_id' => '1',
+    'merch_id' => 1,
     'job_title' => 'Driver',
     'job_desc' => 'asdf',
     'from_loc' => '123 Lane',
@@ -33,4 +32,3 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
  
 //Execute the request
 $result = curl_exec($ch);
-?>
