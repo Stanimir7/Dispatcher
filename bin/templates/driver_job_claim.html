@@ -1,11 +1,11 @@
 {% extends "base_driver.html" %}
 {% block content %}
 <br>
-<h2 style="text-indent:5mm">Job Available for {{bus_name}}</h2>
+<div style="text-indent:5mm; font-size:1.4em; font-weight:bold">Job Available for {{bus_name}}</div>
 <div class="card">
     <div class="card-content">
         {% if job_title %}
-        <h3>{{job_title}}</h3>
+        <div style="font-size:1.2em; font-weight:bold">{{job_title}}</div>
         {% endif %}
         <p class="caption"><b>
         {% if job_desc %}
