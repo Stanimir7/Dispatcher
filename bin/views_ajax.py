@@ -52,13 +52,16 @@ def ajax_job_detail_table():
     if len(data) is not 0:
         job = data[0]
         cursor = mysql.connection.cursor()
-        cursor.callproc('get_assoc_job_driver',[id_job])
+        cursor.execute("SELECT DISTINCT * FROM JobDriver WHERE fk_idJob = %s", [job.get('idJob')])
         data_driver = cursor.fetchall()
         cursor.close()
         mysql.connection.commit()
-        if data_driver[0].get('status') == 'success':
+        if len(data) is not 0:
+            driver_id_list = ''
+            for row in data_driver:
+                driver_id_list = driver_id_list + str(row.get('fk_idDriver')) + ","
             cursor = mysql.connection.cursor()
-            cursor.execute("SELECT DISTINCT * FROM Driver WHERE idDriver = %s", [data_driver[0].get('idDriver')])
+            cursor.execute("SELECT DISTINCT * FROM Driver WHERE idDriver IN (%s)", [driver_id_list[:-1]])
             data_driver_detail = cursor.fetchall()
             cursor.close()
             mysql.connection.commit()
@@ -161,6 +164,6 @@ def ajax_driver_detail_table():
                     'id_driver':id_driver,
                     'table_html':
                     render_template('ajax_business_driver_detail_table.html',
-                           driver_detail=driver,
+                           single_driver_detail=driver,
                            jobs=jobs)
                     })
