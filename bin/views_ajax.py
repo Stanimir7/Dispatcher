@@ -161,6 +161,6 @@ def ajax_driver_detail_table():
                     'id_driver':id_driver,
                     'table_html':
                     render_template('ajax_business_driver_detail_table.html',
-                           single_driver_detail=driver,
+                           driver_detail=driver,
                            jobs=jobs)
                     })
