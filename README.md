@@ -2,12 +2,12 @@
 
 ##Authors
 
-..*Stanimir Genov
-..*Jake Schooley
-..*Justin Gavin
-..*Johan Burke
-..*Steven Snyder
-..*Sean Fitzpatrick
+  *Stanimir Genov
+  *Jake Schooley
+  *Justin Gavin
+  *Johan Burke
+  *Steven Snyder
+  *Sean Fitzpatrick
 
 
 ## Notes
