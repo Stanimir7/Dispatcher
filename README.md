@@ -16,7 +16,7 @@ The code documentation for SQL stored procedures can be browsed by opening the M
 * Report folder: doc/Report
 * Issues folder: doc/Issues
 
-## Artifact Links:
+## Artifact Links
 All below are also in the "doc" directory, except for the demo video (due to size concerns)
 * [Project Spec](https://drive.google.com/open?id=1_SULYpBNfZjYXZLCgcJWjTZjdVQ0qx9mxL6Kjnpk020)
 * [Design Doc](https://docs.google.com/document/d/17NZl4NjEoQi3lYaihtt8VP2ff5I3Bsr5hQMiFeiu9Mo/edit?usp=sharing)
