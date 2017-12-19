@@ -20,4 +20,4 @@ Facilitated the functioning of the group, scheduling, communication with the ins
 
 
 ## Project Artifacts
-Significant authoring/design/contribution to the Project Spec, Design Doc (breakdown by heading here)[https://docs.google.com/spreadsheets/d/1s7d_XqhCzSKNY47GR-tpnsXH0olnfpl6QMoENdiD4IM/edit?usp=sharing], and presentation (overall design, majority of the slides). 
+Significant authoring/design/contribution to the Project Spec, Design Doc (breakdown by heading here)[https://docs.google.com/spreadsheets/d/1s7d_XqhCzSKNY47GR-tpnsXH0olnfpl6QMoENdiD4IM/edit?usp=sharing] and presentation (overall design, majority of the slides). 
