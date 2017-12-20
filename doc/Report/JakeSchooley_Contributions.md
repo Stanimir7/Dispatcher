@@ -1,6 +1,6 @@
-#Jake Schooley - Contributions Report Summary
+# Jake Schooley - Contributions Report Summary
 
-##Programming
+## Programming
 
 In the beginning I took up the responsiblity of creating the front-end of our application on Android Studio. We wanted this so we could
 possibly put the application up Clover's app store. Through both inexperience in some areas on my part, progress was slowed and eventually
@@ -11,18 +11,18 @@ Codes for Deregistration. Some of what was worked on was later edited by another
 
 Here is a link to the Android Repo that was later scrapped: https://github.com/schooleyj/DispatcherClover
 
-##Testing
+## Testing
 
 I was involved in almost all sections of group testing that took place over the course of the semester. I worked with my group members to 
 insure that our project ran smoothly and helped determine any bugs we had. I also did independent testing during my own time to make sure
 that nothing changed while functionality was altered.
 
-##Documentation
+## Documentation
 
 I documented most of the code that we had made, both Python and HTML, to make it easy to understand what each file and method did inside of
 the project.
 
-##Project Artifacts
+## Project Artifacts
 
 I worked on sections of the Design Document, specifically, originally the android section(which had first drafts of how the
 UI would appear), which was turned into just User Interface/Front End section. I also helped edit said Design Document to make sure it was
