@@ -1,0 +1,82 @@
+<!--Driver Detail Pop-Up -->
+<!--When clicking on a Driver, this Pop-up will display the Drivers:-->
+<!--ID#, First and last name, and their Phone# -->
+<!--It will also display any Jobs they've been associated with -->
+<h5>Driver Detail</h5>
+<table class="striped">
+<thead>
+  <tr>
+      <th>Driver ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Phone Number</th>
+  </tr>
+</thead>
+
+<tbody>
+  <tr>
+    <td>
+        {{single_driver_detail["idDriver"]}}
+    </td>
+    <td>
+        {{single_driver_detail["FirstName"]}}
+    </td>
+    <td>
+        {{single_driver_detail["LastName"]}}
+    </td>
+    <td>
+        {{single_driver_detail["PhoneNumber"]}}
+    </td>
+    
+  </tr>
+</tbody>
+</table>
+
+<!--Here we check if the driver has completed any jobs with the Business-->
+<!--If they are not associated with any jobs, there will be no additional details -->
+{% if jobs %}
+<h5>Job History</h5>
+<table class="striped">
+<thead>
+  <tr>
+      <th>Job ID</th>
+      <th>Job Title</th>
+      <th>Status</th>
+      <th>From Location</th>
+      <th>To Location</th>
+      <th>Creation Time</th>
+      <th>Closed Time</th>
+  </tr>
+</thead>
+
+<tbody id="active_jobs_table_body">
+  {% for row in jobs %}
+  <tr>
+    <td>
+        {{row["idJob"]}}
+    </td>
+    <td>
+        {{row["JobTitle"]}}
+    </td>
+    <td>
+        {{row["JobStatus"]}}
+    </td>
+    <td>
+        {{row["FromLoc"]}}
+    </td>
+    <td>
+        {{row["ToLoc"]}}
+    </td>
+    <td>
+        {{row["JobCreateTime"]}}
+    </td>
+    <td>
+        {{row["JobCloseTime"]}}
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% else %}
+<p>No associated jobs.</p>
+{% endif %}

@@ -1,0 +1,141 @@
+<!--Displays the Driver Deregisteration-->
+<!--A driver provides their phone number that they signed up -->
+<!--with Dispatcher with. They then recieve a confirmation code. -->
+<!--Using the confirmation code they can deregister with Dispatcher or -->
+<!--individual businesses -->
+{% extends "base_driver.html" %}
+
+{% block content %}
+	
+	{% if incorrect %}
+	<p>incorrect</p>
+	{% endif %}
+	
+	<div class="row">
+      <div class="col s12">
+        <div class="card " style="margin-top: 10px">
+          <div id="the_card_content" class="card-content">
+						
+						<div id="submit_progress" style="display: none" class="progress">
+                <div class="indeterminate"></div>
+            </div>
+						
+			<div  id="phone_content">
+				<h5>Driver Deregistration</h5>
+				
+				<div class="row">
+					<form id="phone_form" class="col s12">
+						<div class="row">
+						  <div class="input-field col s12">
+							<input name="phone_number" type="tel"  class="validate">
+							<label for="phone_number">Phone Number</label>
+						  </div>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+			<div style="display: none" id="confirmcode_content">
+				<p>A code has been sent to the phone number, enter the confirmation code below.</p>
+				<div class="row">
+					<form action='/dispatcher/format_deregister_driver' method='post' id="conf_form" class="col s12">
+					<input type='hidden' name='key' id='the_key' />
+					<div class="row">
+					  <div class="input-field col s12">
+						<input name="conf_code" type="text"  class="validate">
+						<label for="conf_code">Confirmation Code:</label>
+					  </div>
+					</div>
+					</form>
+				</div>
+			</div>
+
+		          
+
+          
+		</div>
+		<div  class="card-action">
+		  <!--<button href="#!" class="modal-action modal-close waves-effect waves-green btn " type="submit" form="form_create_job">Submit</button>-->
+		  <button id="phone_form_submit_button"  href="#!" class="waves-effect waves-green btn " type="submit" form="phone_form">Submit</button>
+		  <button style="display: none" id="confirm_code_submit_button" class="waves-effect waves-green btn " type="submit" form="conf_form">Submit</button>
+		  
+		</div>
+
+        </div>
+      </div>
+    </div>
+
+
+{% endblock %}
+
+
+
+{% block script_extension %}
+    <script type="text/javascript">
+		/*******************
+     * On Ready Trigger
+     *******************/
+		{% if incorrect %}
+	
+      $(function() {
+        $("#phone_form_submit_button").hide();
+				$("#phone_content").hide();
+				$("#confirm_code_submit_button").show();
+				$("#confirmcode_content").show();
+      });
+			
+		{% endif %}
+			
+			
+    /*******************
+     * Triggers
+     *******************/
+        /*******************
+         * Phone Number Submission
+         *******************/
+        $( "#phone_form" ).submit(function( event ) {
+            
+            var formData = JSON.stringify(objectifyForm($("#phone_form").serializeArray()));
+						
+						$("#phone_form_submit_button").hide();
+						$("#phone_content").hide();
+						$("#submit_progress").show();
+						
+            $.ajax({
+              type: "POST",
+              url: "/dispatcher/confirm_code",
+              data: formData,
+              dataType: "json",
+              contentType : "application/json",
+              success: function(responseData){
+								$("#submit_progress").hide();
+                  //alert(JSON.stringify(responseData));
+										if (typeof responseData.key !== 'undefined')
+										{
+											
+											$("#the_key").val(responseData.key);
+
+										$("#confirm_code_submit_button").show();
+										$("#confirmcode_content").show();
+					
+                  } else if (responseData.status == 'error')
+									{
+										$("#the_card_content").html("<h5>" + responseData.message + "</h5>");
+										$("#phone_form_submit_button").hide();
+									}
+				  
+
+			  }
+            });
+            
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            
+        });
+		
+		
+        
+        
+    </script>
+
+{% endblock %}

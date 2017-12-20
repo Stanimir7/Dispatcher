@@ -1,0 +1,10 @@
+<!--Used for Driver Details -->
+{% for list_item in drivers %}
+<tr style='cursor: pointer' onclick='showDriverDetail({{ list_item['idDriver'] }})'>
+   <td>{{list_item['idDriver']}}</td>
+   <td>{{list_item['FirstName']}}</td>
+   <td>{{list_item['LastName']}}</td>
+   <td>{{list_item['PhoneNumber']}}</td>
+   <td>{{list_item['HireStatus']}}</td>
+</tr>
+{% endfor %}
