@@ -17,3 +17,5 @@ As a second part of the polish phase, I implemented two pieces of functionality:
 * Logout Button that clears the current session authentication information and returns the user to the home page
 * Cookies that allow a smooth user experience without having to log in too often or see the Clover redirect page in between each page navigation.
 
+## Git branch management
+As our project required multiple features, we adopted the workflow of using a branch for each new feature.  This resulted in a complex network of branches on our Github repository, and I was reponsible for ensuring they were merged and for resolving any conflicts that occurred when attempting to merge.
